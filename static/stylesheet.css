@@ -7,6 +7,40 @@
     border-radius: 0 12px 12px 0; /* Rounded corners on the right side */
   }
 
+
+/* CARDS */
 .card {
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  transition: transform .2s ease-in-out;  /* Transition for hover effect */
   width: 350px;
+}
+
+.card:hover {
+  transform: scale(1.03);  /* Slightly enlarge the card when hovered */
+}
+
+.card-body {
+  border-radius: 5px;
+  padding: 16px;
+  background-color: rgb(253, 255, 219);
+}
+
+.card-title {
+  font-size: 1.25rem;  /* Increase font size */
+  margin-bottom: 12px;  /* Space between title and content */
+}
+
+.card-text {
+  font-size: 1rem;  /* Set font size */
+  color: #333;  /* Dark gray text */
+}
+
+.user1-card .card-footer {
+  background-color: #6169d8;  /* White background color */
+  border: 1px solid #6169d8;  /* Light gray border */
+}
+
+.user2-card .card-footer{
+  background-color: #c95757;  /* White background color */
+  border: 1px solid #c95757;  /* Light gray border */
 }
