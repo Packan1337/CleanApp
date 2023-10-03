@@ -1,0 +1,12 @@
+#main-sidebar {
+    height: 100vh;
+    width: auto;
+    z-index: 1;
+    border-right: 4px solid rgba(0, 0, 0, 0.1); /* Soft black border */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);  /* Soft shadow to give depth */
+    border-radius: 0 12px 12px 0; /* Rounded corners on the right side */
+  }
+
+.card {
+  width: 350px;
+}
