@@ -24,6 +24,10 @@ def index():
 def signup():
     return render_template('signup.html')
 
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
 # Run app #
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True)
