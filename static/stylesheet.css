@@ -1,13 +1,16 @@
 #main-sidebar {
   height: 100vh;
   width: auto;
-  z-index: 1;
+  z-index: -2;
   border-right: 4px solid rgba(0, 0, 0, 0.1);
   /* Soft black border */
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   /* Soft shadow to give depth */
-  border-radius: 0 12px 12px 0;
-  /* Rounded corners on the right side */
+
+}
+
+.body {
+  margin-top: 60px;
 }
 
 /* CARDS */
@@ -48,6 +51,16 @@
 }
 
 .signup-card {
+  margin-top: 30px;
+  z-index: -1;
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
   transition: transform .2s ease-in-out;
+  width: 550px;
+}
+
+.navbar {
+  z-index: 20;
+  position: fixed;
+  top: 0;
+  width: 100%;
 }
