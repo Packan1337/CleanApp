@@ -1,46 +1,53 @@
 #main-sidebar {
-    height: 100vh;
-    width: auto;
-    z-index: 1;
-    border-right: 4px solid rgba(0, 0, 0, 0.1); /* Soft black border */
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);  /* Soft shadow to give depth */
-    border-radius: 0 12px 12px 0; /* Rounded corners on the right side */
-  }
-
+  height: 100vh;
+  width: auto;
+  z-index: 1;
+  border-right: 4px solid rgba(0, 0, 0, 0.1);
+  /* Soft black border */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  /* Soft shadow to give depth */
+  border-radius: 0 12px 12px 0;
+  /* Rounded corners on the right side */
+}
 
 /* CARDS */
-.card {
+.user-card {
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
-  transition: transform .2s ease-in-out;  /* Transition for hover effect */
+  transition: transform .2s ease-in-out;
   width: 350px;
 }
 
-.card:hover {
-  transform: scale(1.03);  /* Slightly enlarge the card when hovered */
+.user-card:hover {
+  transform: scale(1.03);
 }
 
-.card-body {
+.user-card-body {
   border-radius: 5px;
   padding: 16px;
   background-color: rgb(253, 255, 219);
 }
 
-.card-title {
-  font-size: 1.25rem;  /* Increase font size */
-  margin-bottom: 12px;  /* Space between title and content */
+.user-card-title {
+  font-size: 1.25rem;
+  margin-bottom: 12px;
 }
 
-.card-text {
-  font-size: 1rem;  /* Set font size */
-  color: #333;  /* Dark gray text */
+.user-card-text {
+  font-size: 1rem;
+  color: #333;
 }
 
-.user1-card .card-footer {
-  background-color: #6169d8;  /* White background color */
-  border: 1px solid #6169d8;  /* Light gray border */
+.user1-card .user-card-footer {
+  background-color: #6169d8;
+  border: 1px solid #6169d8;
 }
 
-.user2-card .card-footer{
-  background-color: #c95757;  /* White background color */
-  border: 1px solid #c95757;  /* Light gray border */
+.user2-card .user-card-footer {
+  background-color: #c95757;
+  border: 1px solid #c95757;
+}
+
+.signup-card {
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  transition: transform .2s ease-in-out;
 }
