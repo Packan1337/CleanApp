@@ -20,6 +20,9 @@ with app.app_context():
 def index():
     return render_template('index.html')
 
+@app.route('/signup')
+def signup():
+    return render_template('signup.html')
 
 # Run app #
 if __name__ == '__main__':
