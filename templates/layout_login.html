@@ -23,6 +23,17 @@
 </head>
 
 <body>
+    <span>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <ul class="flashes">
+            {% for category, message in messages %}
+            <li class="alert alert-{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+    </span>
     <!-- Navbar -->
     <nav class="navbar navbar-dark bg-primary">
         <div class="container-fluid d-flex justify-content-center position-relative">
@@ -44,6 +55,7 @@
             </div>
         </div>
     </nav>
+
     <div class="d-flex justify-content-center">
         <!-- Main body -->
         <div class="d-flex mx-2 my-5" id="main-body">
@@ -51,6 +63,16 @@
             {% endblock %}
         </div>
     </div>
+
+    <!-- Flash-message timer script -->
+    <script>
+        setTimeout(function () {
+            var alert = document.querySelector(".alert");
+            if (alert) {
+                alert.remove();
+            }
+        }, 3000);
+    </script>
 </body>
 
 </html>
