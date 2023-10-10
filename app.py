@@ -54,6 +54,40 @@ def add_user():
         return redirect(url_for('signup'))
 
 
+@app.route('/reset_password_page')
+def reset_password_page():
+    return render_template('reset_password.html')
+
+
+@app.route('/reset_password', methods=['POST'])
+def reset_password():
+    email = request.form.get('email')
+    current_password = request.form.get('current_password')
+    new_password = request.form.get('new_password')
+    new_password_repeat = request.form.get('new_password_repeat')
+
+    if new_password != new_password_repeat:
+        flash('Passwords do not match!', 'danger')
+        return redirect(url_for('reset_password_page'))
+
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        flash('User with the provided email does not exist!', 'danger')
+        return redirect(url_for('reset_password_page'))
+
+    if not check_password_hash(user.password, current_password):
+        flash('Current password is incorrect!', 'danger')
+        return redirect(url_for('reset_password_page'))
+
+    user.password = generate_password_hash(new_password)
+
+    db.session.commit()
+
+    flash('Password successfully updated!', 'success')
+    return redirect(url_for('login'))
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
