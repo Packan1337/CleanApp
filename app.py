@@ -144,6 +144,10 @@ def create_profile():
     """
     return render_template("create-profile.html")
 
+@app.route("/add-profile")
+def add_profile(): # Routen för addProfile.html
+                   # Klickar man Task management så kommer man till addProfile.html
+    return render_template("addProfile.html")
 
 # Run app #
 # Remove this when deploying to pythonanywhere

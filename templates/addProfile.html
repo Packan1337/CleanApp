@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2>Lägg till en ny profil</h2>
+        <form method="post" action="/addprofile">
+            <div class="mb-3">
+                <label for="name" class="form-label">Profilnamn</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="profileRole" class="form-label">Roll</label>
+                <select class="form-control" id="profileRole" name="profile_role" required>
+                    <option value="Vuxen">Vuxen</option>
+                    <option value="Barn">Barn</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Lägg till profil</button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Tillbaka</a>
+        </form>
+
+        {% if profiles %}
+            <h3 class="mt-5">Skapade Profiler</h3>
+            <ul class="list-group mb-4">
+                {% for profile in profiles %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ profile.name }} ({{ profile.role }})
+                        <form method="post" action="/delete-profile/{{ profile.id }}" class="mb-0">
+                            <button type="submit" class="btn btn-danger btn-sm">Radera</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <h3 class="mt-5">Inga profiler har skapats än.</h3>
+        {% endif %}
+    </div>
+{% endblock %}
