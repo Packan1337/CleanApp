@@ -1,0 +1,128 @@
+#main-sidebar {
+  height: 100vh;
+  width: auto;
+  border-right: 4px solid rgba(0, 0, 0, 0.1);
+  /* Soft black border */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  /* Soft shadow to give depth */
+
+}
+
+.body {
+  margin-top: 60px;
+}
+
+/* CARDS */
+.user-card {
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  transition: transform .2s ease-in-out;
+  width: 350px;
+}
+
+.user-card:hover {
+  transform: scale(1.03);
+}
+
+.user-card-body {
+  border-radius: 5px;
+  padding: 16px;
+  background-color: rgb(253, 255, 219);
+}
+
+.user-card-title {
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+}
+
+.user-card-text {
+  font-size: 1rem;
+  color: #333;
+}
+
+.user1-card .user-card-footer {
+  background-color: #6169d8;
+  border: 1px solid #6169d8;
+}
+
+.user2-card .user-card-footer {
+  background-color: #c95757;
+  border: 1px solid #c95757;
+}
+
+.signup-card {
+  margin-top: 30px;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  transition: transform .2s ease-in-out;
+  width: 550px;
+}
+
+.navbar {
+  z-index: 20;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 60px;
+}
+
+#profile-svg {
+  width: 25px;
+  height: 25x;
+}
+
+/* FLASH MESSAGE */
+/* Success message */
+.alert-success {
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+/* Error message */
+.alert-danger {
+  color: #a94442 !important;
+  background-color: #f2dede !important;
+  border-color: #ebccd1;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+ul.flashes {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.flashes {
+  position: fixed;
+  top: 1%; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  z-index: 10000; 
+  width: auto;
+  max-width: 90%;
+  border-radius: 0;
+}
+
+.alert {
+  margin-bottom: 0;
+  text-align: center;
+  padding: 10px;
+}
+
+#task-val {
+  border-radius: 4px;
+  color:white;
+  border: 1px solid transparent;
+}
+
+#tasks-lista {
+  border-radius: 4px;
+  color:white;
+  border: 1px solid transparent;
+}
