@@ -134,18 +134,6 @@ def profile_manager():
     return render_template("profile-manager.html")
 
 
-@app.route("/create-profile")
-def create_profile():
-    """
-    *DENNA ANVÄNDS INTE ÄN!*
-
-    Börja med proifle-mangaer sidan.
-
-    Tanken är att när man är i profile-manager sidan så kan man
-    trycka "add profile" och då kunna skapa en till profil för hushållet.
-    """
-    return render_template("create-profile.html")
-
 # Run app #
 # Remove this when deploying to pythonanywhere
 if __name__ == '__main__':
