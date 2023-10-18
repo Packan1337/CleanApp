@@ -11,9 +11,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://netdna.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
+        .outer {
+            justify-content: center !important;
+        }
+
         .container-bootdey {
             margin-top: 20px;
             margin-left: 50px;
+            max-width: auto;
+        }
+
+        .title-pm {
+            padding-bottom: 50px;
         }
 
         .user-widget-2 .media {
@@ -202,12 +211,48 @@
             background-color: #f0ff25;
             color: rgb(0, 0, 0);
         }
+
+        .media {
+            height: 50px;
+            line-height: 50px;
+            align-items: center;
+        }
+
+        .media-body {
+            display: flex;
+            align-items: center;
+        }
+
+        .badge {
+            margin-left: 20px;
+        }
+
+
+        h5 {
+            line-height: normal;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .edit-icon {
+            width: 20px;
+            height: 20px;
+            margin-left: auto;
+        }
+
+        .lägg-till-profil {
+            margin-top: 50px;
+        }
+
+        .btn {
+            margin-right: 10px;
+        }
     </style>
 </head>
 
 <body>
     <div class="container-bootdey">
-        <h1>Profile Management</h1>
+        <h1 class="title-pm">Profile Management</h1>
         <div class="row">
             <div class="col">
                 <div class="user-widget-2">
@@ -217,16 +262,20 @@
                                 src="https://bootdey.com/img/Content/avatar/avatar1.png" alt>
                             <div class="media-body">
                                 <h5>Packan</h5>
-
-                            </div><i class="d-flex align-self-center fa fa-dot-circle-o color-success"></i>
+                                <img class="edit-icon"
+                                    src="https://cdn3.iconfinder.com/data/icons/feather-5/24/edit-1024.png"
+                                    alt="edit icon">
+                            </div>
                         </li>
                         <li class="media">
                             <img class="rounded-circle d-flex align-self-center"
                                 src="https://bootdey.com/img/Content/avatar/avatar3.png" alt>
                             <div class="media-body">
                                 <h5>Ana de Armas</h5>
-
-                            </div><i class="d-flex align-self-center fa fa-dot-circle-o color-info"></i>
+                                <img class="edit-icon"
+                                    src="https://cdn3.iconfinder.com/data/icons/feather-5/24/edit-1024.png"
+                                    alt="edit icon">
+                            </div>
                         </li>
                         <li class="media">
                             <img class="rounded-circle d-flex align-self-center"
@@ -234,15 +283,73 @@
                             <div class="media-body">
                                 <h5>Packan Jr.</h5>
                                 <p>
-                                    <span class="badge badge-outline badge-sm badge-danger badge-pill">Child mode</span>
+                                    <span class="badge badge-outline badge-sm badge-danger badge-pill">Child
+                                        mode</span>
                                 </p>
-                            </div><i class="d-flex align-self-center fa fa-dot-circle-o color-success"></i>
+                                <img class="edit-icon"
+                                    src="https://cdn3.iconfinder.com/data/icons/feather-5/24/edit-1024.png"
+                                    alt="edit icon">
+                            </div>
                         </li>
                     </ul>
                 </div>
             </div>
+            <div class="container-fluid justify-content-center">
+                <div class=lägg-till-profil>
+                    <!-- Plus Knappen för att öppna popup -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#addProfileModal">
+                        +
+                    </button>
+                    <h5 data-bs-toggle="modal"
+                    data-bs-target="#addProfileModal">Lägg till profil</h5>
+                </div>
+            </div>
         </div>
+
+        <!-- popup -->
+        <div class="modal fade" id="addProfileModal" tabindex="-1" aria-labelledby="addProfileModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addProfileModalLabel">Lägg till profil</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addProfileForm" method="post">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Profilnamn</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="profileRole" class="form-label">Roll</label>
+                                <select class="form-control" id="profileRole" name="profile_role" required>
+                                    <option value="Vuxen">Vuxen</option>
+                                    <option value="Barn">Barn</option>
+                                </select>
+                            </div>
+                            <button type="button" id="submitButton" class="btn btn-primary">Lägg till profil</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function () {
+                var submitButton = document.getElementById('submitButton');
+                submitButton.addEventListener('click', function () {
+                    // Just nu händer det inget när man trycker på lägg till 
+                    // lägg till här med databasen
+                    var modal = bootstrap.Modal.getInstance(document.getElementById('addProfileModal'));
+                    modal.hide();
+                });
+            });
+        </script>
     </div>
+
+
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="https://netdna.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
     <script type="text/javascript">
