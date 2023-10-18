@@ -19,6 +19,10 @@
         integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMt23cez/9paD6MCh9FqJa6ll++2cULep4y+H5p5" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/fc488dc40e.js" crossorigin="anonymous"></script>
 
+    <!-- JS/Jquery -->
+    <script type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
     <title>CleanApp</title>
 </head>
 
@@ -61,7 +65,11 @@
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                     <li><a class="dropdown-item" href="/page1">Profile</a></li>
+                    {% if session.get("user") %}
                     <li><a class="dropdown-item" href="logout">Logout</a></li>
+                    {% else %}
+                    <li><a class="dropdown-item" href="login">Login</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -70,7 +78,7 @@
 
         <!-- Sidebar -->
         <div id="main-sidebar" class="d-flex flex-column flex-shrink-0 p-3 text-white bg-light">
-            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+            <a href="/" class="d-flex align-items-center link-dark text-decoration-none">
                 <svg id="household-svg" xmlns="http://www.w3.org/2000/svg" height="2em" viewBox="0 0 640 512">
                     <path
                         d="M480 48c0-26.5-21.5-48-48-48H336c-26.5 0-48 21.5-48 48V96H224V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V96H112V24c0-13.3-10.7-24-24-24S64 
@@ -81,34 +89,35 @@
                 16-16 16H208c-8.8 0-16-7.2-16-16V176c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16zM112 160c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H80c-8.8 
                 0-16-7.2-16-16V176c0-8.8 7.2-16 16-16h32zM256 304c0 8.8-7.2 16-16 16H208c-8.8 0-16-7.2-16-16V272c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 
                 16v32zM112 320H80c-8.8 0-16-7.2-16-16V272c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16zm304-48v32c0 8.8-7.2 16-16 
-                16H368c-8.8 0-16-7.2-16-16V272c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16zM400 64c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H368c-8.8 0-16-7.2-16-16V80c0-8.8 7.2-16 16-16h32zm16 112v32c0 8.8-7.2 16-16 16H368c-8.8 0-16-7.2-16-16V176c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16z" />
+                16H368c-8.8 0-16-7.2-16-16V272c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16zM400 64c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H368c-8.8 
+                0-16-7.2-16-16V80c0-8.8 7.2-16 16-16h32zm16 112v32c0 8.8-7.2 16-16 16H368c-8.8 0-16-7.2-16-16V176c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16z" />
                 </svg>
                 <span class="fs-4 mx-3">Household 1</span>
             </a>
             <hr>
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
-                    <a href="#" class="nav-link active" aria-current="page">
+                    <a href="index" class="nav-link link-dark" aria-current="page" data-route="/index">
                         <svg class="bi me-2" width="16" height="16">
                             <use xlink:href="#home"></use>
                         </svg>
-                        Tasks
+                        Home
                     </a>
                 </li>
                 <li>
-                    <a href="{{ url_for('task_management') }}" class="nav-link link-dark">
+                    <a href="task_management" class="nav-link link-dark" data-route="/task_management">
                         <svg class="bi me-2" width="16" height="16">
                             <use xlink:href="#speedometer2"></use>
                         </svg>
-                        Task management
+                        Manage Tasks
                     </a>
                 </li>
                 <li>
-                    <a href="{{ url_for('profile_manager') }}" class="nav-link link-dark">
+                    <a href="profile_manager" class="nav-link link-dark" data-route="/profile_manager">
                         <svg class="bi me-2" width="16" height="16">
                             <use xlink:href="#table"></use>
                         </svg>
-                        Profile Management
+                        Manage Profiles
                     </a>
                 </li>
             </ul>
@@ -116,7 +125,7 @@
         </div>
 
         <!-- Main body -->
-        <div class="d-flex mx-2" id="main-body">
+        <div class="d-flex mx-3" id="main-body">
             {% block content %}
             {% endblock %}
         </div>
@@ -130,6 +139,24 @@
                 alert.remove();
             }
         }, 2000);
+    </script>
+
+    <!-- Sidebar-selection script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const sidebarMenuItems = document.querySelectorAll(".nav-link");
+            const currentPath = window.location.pathname;
+
+            sidebarMenuItems.forEach(item => {
+                // Remove active class from all items first
+                item.classList.remove("active");
+
+                // Check if the current path includes the data-route of the sidebar item
+                if (currentPath.includes(item.getAttribute("data-route"))) {
+                    item.classList.add("active");
+                }
+            });
+        });
     </script>
 </body>
 

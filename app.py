@@ -10,7 +10,7 @@ from flask import (
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-from db_models import db, User
+from db_models import db, User, Profiles
 
 app = Flask(__name__)
 app.secret_key = "secretkey"
@@ -130,14 +130,78 @@ def logout():
     return redirect(url_for("login"))
 
 
-@app.route("/profile-manager")
+@app.route("/profile_manager")
 def profile_manager():
-    return render_template("profile_manager.html")
+    user = User.query.filter_by(email=session['user']).first()
+    if user:
+        profiles = user.profiles
+    else:
+        profiles = []
+    return render_template("profile_manager.html", profiles=profiles)
 
-# Route to task_management.html
-@app.route("/task-management")
+
+@app.route("/add_profile", methods=["POST"])
+def add_profile():
+    try:
+        user = User.query.filter_by(email=session['user']).first()
+        if user is None:
+            flash(f"User: {user.email} does not exist.", "danger")
+            return redirect(url_for("profile_manager"))
+
+        else:
+            user_id = user.id
+            profile_name = request.form["profile_name"]
+            profile_type = request.form["profile_type"]
+
+            new_profile = Profiles(
+                user_id, profile_name, profile_type
+            )
+
+            db.session.add(new_profile)
+            db.session.commit()
+
+            flash(
+                f"Profile: {new_profile.profile_name} created successfully.", "success")
+            return redirect(url_for("profile_manager"))
+
+    except Exception as e:
+        db.session.rollback()
+        flash(
+            f"An error occurred while adding the profile: {str(e)}", "danger")
+        return redirect(url_for("profile_manager"))
+
+
+@app.route("/delete_profile/<int:profile_id>", methods=["POST"])
+def delete_profile(profile_id):
+    profile = Profiles.query.get_or_404(profile_id)
+    try:
+        db.session.delete(profile)
+        db.session.commit()
+        flash("Profile deleted successfully.", "success")
+    except:
+        db.session.rollback()
+        flash("Error deleting profile.", "danger")
+    return redirect(url_for("profile_manager"))
+
+
+@app.route("/edit_profile/<int:profile_id>", methods=["POST"])
+def edit_profile(profile_id):
+    profile = Profiles.query.get_or_404(profile_id)
+    new_name = request.form.get("new_name")
+    if new_name:
+        profile.profile_name = new_name
+        db.session.commit()
+        flash("Profile name updated successfully.", "success")
+    else:
+        flash("Invalid name.", "danger")
+    return redirect(url_for("profile_manager"))
+
+
+@app.route("/task_management")
 def task_management():
-    return render_template("task_management.html")
+    profiles = Profiles.query.all()
+    return render_template("task_management.html", profiles=profiles)
+
 
 # Run app #
 # Remove this when deploying to pythonanywhere
