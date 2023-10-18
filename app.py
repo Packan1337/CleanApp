@@ -5,11 +5,9 @@ from flask import (
     flash,
     request,
     Flask,
-    jsonify,
     session,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_sqlalchemy import SQLAlchemy
 from db_models import db, User, Profiles
 
 app = Flask(__name__)
@@ -132,12 +130,16 @@ def logout():
 
 @app.route("/profile_manager")
 def profile_manager():
-    user = User.query.filter_by(email=session['user']).first()
-    if user:
-        profiles = user.profiles
+    if 'user' not in session:
+        flash("Please log in to view this page.", "danger")
+        return redirect(url_for("login"))
     else:
-        profiles = []
-    return render_template("profile_manager.html", profiles=profiles)
+        user = User.query.filter_by(email=session['user']).first()
+        if user:
+            profiles = user.profiles
+        else:
+            profiles = []
+        return render_template("profile_manager.html", profiles=profiles)
 
 
 @app.route("/add_profile", methods=["POST"])
@@ -199,7 +201,20 @@ def edit_profile(profile_id):
 
 @app.route("/task_management")
 def task_management():
-    profiles = Profiles.query.all()
+    if 'user' in session:
+        user_email = session['user']
+        user = User.query.filter_by(email=user_email).first()
+
+        if user:
+            profiles = user.profiles
+        else:
+            flash("User does not exist.", "danger")
+            return redirect(url_for("login"))
+
+    else:
+        flash("Please log in to view this page.", "danger")
+        return redirect(url_for("login"))
+
     return render_template("task_management.html", profiles=profiles)
 
 
