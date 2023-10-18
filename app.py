@@ -111,7 +111,8 @@ def login():
         if user:
             if check_password_hash(user.password, password):
                 session["user"] = user.email
-                flash(f"Successfully logged in as: {session['user']}.", "success")
+                flash(
+                    f"Successfully logged in as: {session['user']}.", "success")
                 return redirect(url_for("index"))
             else:
                 flash("Incorrect password, try again.", "danger")
@@ -131,11 +132,14 @@ def logout():
 
 @app.route("/profile-manager")
 def profile_manager():
-    return render_template("profile-manager.html")
+    return render_template("profile_manager.html")
 
+# Route to task_management.html
+@app.route("/task-management")
+def task_management():
+    return render_template("task_management.html")
 
 # Run app #
 # Remove this when deploying to pythonanywhere
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True)
-        
