@@ -1,3 +1,4 @@
+/* SIDEBAR */
 #main-sidebar {
   height: 100vh;
   width: auto;
@@ -5,15 +6,24 @@
   /* Soft black border */
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   /* Soft shadow to give depth */
-
-}
-
-.active {
-  background-color: #0d6efd;
 }
 
 .body {
   margin-top: 60px;
+}
+
+/* Custom CSS for active navbar links */
+.nav-pills .nav-link.active,
+.nav-pills .nav-link.active:focus,
+.nav-pills .nav-link.active:hover {
+  color: #fff !important;
+  background-color: #0d6efd !important;
+}
+
+/* Optional: Custom CSS for navbar links on hover */
+.nav-pills .nav-link:hover {
+  transform: scale(1.04);
+  transition: transform .2s ease-in-out;
 }
 
 /* CARDS */
