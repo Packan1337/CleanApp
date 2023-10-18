@@ -1,6 +1,41 @@
 {% extends "layout.html" %}
 {% block content %}
+
 <body class="body">
+    <div class="d-flex mt-4">
+        <form action="tasks-form">
+            <div class="mb-3">
+                <label for="tasks-lista" class="form-label">
+                    <h3>Välj uppgift</h3>
+                </label>
+                <select name="tasks-lista" id="tasks-lista" class="form-select">
+                    <option value="task1">Diska</option>
+                    <option value="task2">Dammsuga</option>
+                    <option value="task3">Städa toan</option>
+                    <option value="task4">Vattna blommor</option>
+                    <option value="task5">Slänga soporna</option>
+                    <option value="task6">Tvätta kläder</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="användare-lista" class="form-label">
+                    <h3>Välj användare</h3>
+                </label>
+
+                <select name="användare-lista" id="användare-lista" class="form-select">
+                    {% for profile in profiles %}
+                    <option value="användare1">{{ profile.profile_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Tilldela">
+        </form>
+    </div>
+</body>
+{% endblock %}
+
+<!-- <body class="body">
     <form action="tasks-form" style="padding: 20px;">
         <label for="tasks-lista">Välj uppgift</label>
         <br>
@@ -24,5 +59,4 @@
         <br>
         <input id ="task-val" type="submit" value="Tilldela" style="background-color: #0d6efd">
     </form>
-</body>
-{% endblock %}
+</body> -->
