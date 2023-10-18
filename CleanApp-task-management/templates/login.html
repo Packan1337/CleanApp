@@ -1,0 +1,44 @@
+{% extends "layout_login.html" %}
+{% block content %}
+
+<body class="body">
+    <section>
+        <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+            <div class="container-fluid h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-12">
+                        <div class="card signup-card" style="border-radius: 25px;">
+                            <div class="card-body p-5">
+                                <h2 class="text mb-5" style="font-size: 42px">Login</h2>
+                                <form id="login-form" action="{{ url_for('login') }}" method="post">
+                                    <div class="form-outline mb-4">
+                                        <input type="email" name="login-email" id="login-email"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="form3Example3cg">Email</label>
+                                    </div>
+                                    <div class="form-outline mb-4">
+                                        <input type="password" name="login-password" id="login-password"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="form3Example4cg">Password</label>
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <button type="submit" name="login-button" style="background-color: #0d6efd"
+                                            class="btn btn-success btn-block btn-lg gradient-custom-4 text-body"><FONT COLOR="white">Login
+                                        </button>
+                                    </div>
+                                    <p class="text-center text-muted mt-5 mb-0">Create an account? <a href="/signup"
+                                            class="fw-bold text-body"><u>Sign up here</u></a></p>
+                                    <p style="position: relative; top:-30px;" class="text-center text-muted mt-5 mb-0">
+                                        Forgot password? <a href="/reset_password_page" class="fw-bold text-body"><u>Click here</u></a>
+                                    </p>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+{% endblock %}

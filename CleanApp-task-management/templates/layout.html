@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS/Bootstrap link -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="/static/stylesheet.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMt23cez/9paD6MCh9FqJa6ll++2cULep4y+H5p5" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/fc488dc40e.js" crossorigin="anonymous"></script>
+
+    <title>CleanApp</title>
+</head>
+
+<body>
+    <span>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <ul class="flashes">
+            {% for category, message in messages %}
+            <li class="alert alert-{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+    </span>
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container-fluid d-flex justify-content-center position-relative">
+            <a class="navbar-brand position-absolute start-50 translate-middle-x" href="/">
+                <h3>CleanApp</h3>
+            </a>
+            <div class="dropdown ms-auto">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-bs-toggle="dropdown">
+                    <small class="mx-2" id="logged-in-div">
+                        {% if session.get("user") %}
+                        Logged in as:
+                        {% if session.get("user") %}
+                        {{ session["user"] }}
+                        {% endif %}
+                        {% else %}
+                        Not logged in
+                        {% endif %}
+                    </small>
+                    <svg id="profile-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                        <path fill="#ffffff"
+                            d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z" />
+                    </svg>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" href="/page1">Profile</a></li>
+                    <li><a class="dropdown-item" href="logout">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div id="main-sidebar" class="d-flex flex-column flex-shrink-0 p-3 text-white bg-light">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                <svg id="household-svg" xmlns="http://www.w3.org/2000/svg" height="2em" viewBox="0 0 640 512">
+                    <path
+                        d="M480 48c0-26.5-21.5-48-48-48H336c-26.5 0-48 21.5-48 48V96H224V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V96H112V24c0-13.3-10.7-24-24-24S64 
+                10.7 64 24V96H48C21.5 96 0 117.5 0 144v96V464c0 26.5 21.5 48 48 48H304h32 96H592c26.5 0 48-21.5 48-48V240c0-26.5-21.5-48-48-48H480V48zm96 
+                320v32c0 8.8-7.2 16-16 16H528c-8.8 0-16-7.2-16-16V368c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16zM240 416H208c-8.8 0-16-7.2-16-16V368c0-8.8 
+                7.2-16 16-16h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16zM128 400c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V368c0-8.8 7.2-16 16-16h32c8.8 
+                0 16 7.2 16 16v32zM560 256c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H528c-8.8 0-16-7.2-16-16V272c0-8.8 7.2-16 16-16h32zM256 176v32c0 8.8-7.2 
+                16-16 16H208c-8.8 0-16-7.2-16-16V176c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16zM112 160c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H80c-8.8 
+                0-16-7.2-16-16V176c0-8.8 7.2-16 16-16h32zM256 304c0 8.8-7.2 16-16 16H208c-8.8 0-16-7.2-16-16V272c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 
+                16v32zM112 320H80c-8.8 0-16-7.2-16-16V272c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16zm304-48v32c0 8.8-7.2 16-16 
+                16H368c-8.8 0-16-7.2-16-16V272c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16zM400 64c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H368c-8.8 0-16-7.2-16-16V80c0-8.8 7.2-16 16-16h32zm16 112v32c0 8.8-7.2 16-16 16H368c-8.8 0-16-7.2-16-16V176c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16z" />
+                </svg>
+                <span class="fs-4 mx-3">Household 1</span>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" aria-current="page">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#home"></use>
+                        </svg>
+                        Tasks
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#speedometer2"></use>
+                        </svg>
+                        Task management
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#table"></use>
+                        </svg>
+                        Profile management
+                    </a>
+                </li>
+            </ul>
+            <hr>
+        </div>
+        <!-- Main body -->
+        <div class="d-flex mx-2" id="main-body">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <!-- Flash-message timer script -->
+    <script>
+        setTimeout(function () {
+            var alert = document.querySelector(".alert");
+            if (alert) {
+                alert.remove();
+            }
+        }, 2000);
+    </script>
+</body>
+
+</html>
