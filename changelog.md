@@ -10,8 +10,8 @@
 - Finputsade struktur/placering etc på profilerna
 
 ### Task-manager
-- Ändrade task_management delarna till bootstrap för behålla samma stil
-- Backend-funktion för att fetcha profiler från db för att kunna visa i listan
+- Ändrade task_management frontend-delarna till bootstrap för behålla samma stil
+- La till backend-funktion för att fetcha profiler från db för att kunna visa i listan
 - La till loop som visar profilerna i "Användar"-listan istället för hårdkodade namn
 
 ### Övrigt (all kod)
