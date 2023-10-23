@@ -25,3 +25,8 @@
     - Ändrade namnen för att göra det mer lättläst och tydligt. "Tasks" är nu "Home", eftersom det är den första sidan man ska se ändå. (Allt detta är bara förslag)
 - La till en "Log in" knapp som visas istället för logout om man inte är inloggad i navbar-ikonen (if-sats som kollar session.get("user"))
 - La till en Changelog.md här i mappen, kanske kan användas framöver när någon gör stora förändringar?
+
+# 2023-10-18 - Charlie, sprint 3
+## Bugfixes
+- Fixade felhantering för "Manage profiles" + "Manage tasks", nu ombeds man logga in om man inte är det istället för att få ett error
+- Fixade fetchen för profilerna i "Manage tasks", nu hämtas bara profilerna för den inloggade användaren

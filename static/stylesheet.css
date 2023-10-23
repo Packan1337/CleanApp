@@ -366,10 +366,11 @@ h5 {
   margin-right: auto;
 }
 
+/* Ta bort margin? Ser konstigt ut när inga profiler existerar */
 .lägg-till-profil {
   margin-top: 50px;
 }
 
-.btn {
+#lägg-till-profil-knapp {
   margin-right: 10px;
 }
