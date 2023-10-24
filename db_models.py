@@ -42,7 +42,7 @@ class Tasks(db.Model):
         self.task_weight = task_weight
 
 
-class Assigned_Tasks(db.Model):
+class AssignedTasks(db.Model):
     task_id = db.Column(db.Integer, db.ForeignKey("tasks.task_id"), primary_key=True)
     profile_id = db.Column(db.Integer, db.ForeignKey("profiles.id"), primary_key=True)
 
