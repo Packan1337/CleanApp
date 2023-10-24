@@ -24,6 +24,7 @@ class Profiles(db.Model):
     profile_name = db.Column(db.String(50), unique=False, nullable=False)
     profile_type = db.Column(db.String(50), unique=False, nullable=False)
     user = db.relationship("User", backref="profiles")
+    assigned_tasks = db.relationship("AssignedTasks", backref="profile")
 
     def __init__(self, user_id, profile_name, profile_type):
         self.user_id = user_id
@@ -36,6 +37,7 @@ class Tasks(db.Model):
     task_title = db.Column(db.String(50), unique=False, nullable=False)
     task_desc = db.Column(db.String(100), unique=False, nullable=False)
     task_weight = db.Column(db.Integer, unique=False, nullable=False)
+    assignments = db.relationship("AssignedTasks", backref="task")
 
     def __init__(self, task_title, task_desc, task_weight):
         self.task_title = task_title
@@ -112,3 +114,23 @@ class AssignedTasks(db.Model):
     def __init__(self, task_id, profile_id):
         self.task_id = task_id
         self.profile_id = profile_id
+
+    @classmethod
+    def assign_task_to_profile(cls, task_id, profile_id):
+        existing_assignment = cls.query.filter_by(
+            task_id=task_id, profile_id=profile_id
+        ).first()
+        if existing_assignment:
+            return {
+                "status": "failure",
+                "message": "The task is already assigned to this profile.",
+            }
+
+        assignment = cls(task_id=task_id, profile_id=profile_id)
+        db.session.add(assignment)
+        db.session.commit()
+
+        return {
+            "status": "success",
+            "message": "Task successfully assigned to profile!",
+        }

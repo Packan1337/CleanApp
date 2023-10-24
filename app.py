@@ -22,9 +22,11 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+    Tasks.add_list_to_tasksdb()
 
-@app.route('/')
-@app.route('/index')
+
+@app.route("/")
+@app.route("/index")
 def index():
     return render_template("index.html")
 
@@ -109,8 +111,7 @@ def login():
         if user:
             if check_password_hash(user.password, password):
                 session["user"] = user.email
-                flash(
-                    f"Successfully logged in as: {session['user']}.", "success")
+                flash(f"Successfully logged in as: {session['user']}.", "success")
                 return redirect(url_for("index"))
             else:
                 flash("Incorrect password, try again.", "danger")
@@ -130,11 +131,11 @@ def logout():
 
 @app.route("/profile_manager")
 def profile_manager():
-    if 'user' not in session:
+    if "user" not in session:
         flash("Please log in to view this page.", "danger")
         return redirect(url_for("login"))
     else:
-        user = User.query.filter_by(email=session['user']).first()
+        user = User.query.filter_by(email=session["user"]).first()
         if user:
             profiles = user.profiles
         else:
@@ -145,7 +146,7 @@ def profile_manager():
 @app.route("/add_profile", methods=["POST"])
 def add_profile():
     try:
-        user = User.query.filter_by(email=session['user']).first()
+        user = User.query.filter_by(email=session["user"]).first()
         if user is None:
             flash(f"User: {user.email} does not exist.", "danger")
             return redirect(url_for("profile_manager"))
@@ -155,21 +156,19 @@ def add_profile():
             profile_name = request.form["profile_name"]
             profile_type = request.form["profile_type"]
 
-            new_profile = Profiles(
-                user_id, profile_name, profile_type
-            )
+            new_profile = Profiles(user_id, profile_name, profile_type)
 
             db.session.add(new_profile)
             db.session.commit()
 
             flash(
-                f"Profile: {new_profile.profile_name} created successfully.", "success")
+                f"Profile: {new_profile.profile_name} created successfully.", "success"
+            )
             return redirect(url_for("profile_manager"))
 
     except Exception as e:
         db.session.rollback()
-        flash(
-            f"An error occurred while adding the profile: {str(e)}", "danger")
+        flash(f"An error occurred while adding the profile: {str(e)}", "danger")
         return redirect(url_for("profile_manager"))
 
 
@@ -201,8 +200,8 @@ def edit_profile(profile_id):
 
 @app.route("/task_management")
 def task_management():
-    if 'user' in session:
-        user_email = session['user']
+    if "user" in session:
+        user_email = session["user"]
         user = User.query.filter_by(email=user_email).first()
 
         if user:
@@ -215,10 +214,36 @@ def task_management():
         flash("Please log in to view this page.", "danger")
         return redirect(url_for("login"))
 
-    return render_template("task_management.html", profiles=profiles)
+    tasks = Tasks.query.all()
+
+    # DETTA ÄR ETT EXEMPEL PÅ INMATNING AV EN NY TASK!
+    # TA BORT DENNA KOD NÄR FRONTENDEN ÄR KLAR!
+
+    # MAN VILL EXPERMINEERA MED ATT LÄGGA TILL EN NY TASK
+    # SÅ ÄR DET BARA ATT TA BORT KOMMENTAREN FRÅN KODEN NEDAN
+    ##########################################
+    # task_title = "Dammsuga 2"
+    # task_desc = "En beskrivning."
+
+    # response = Tasks.add_new_task(task_title, task_desc)
+    # print(response)
+    ##########################################
+
+    # DETTA ÄR ETT EXEMPEL PÅ ATT LÄGGA TILL EN TASK TILL EN PROFILE!
+    ##########################################
+    #result = AssignedTasks.assign_task_to_profile(task_id=1, profile_id=5)
+    #print(result["message"])
+    ##########################################
+
+    return render_template("task_management.html", profiles=profiles, tasks=tasks)
+
+
+@app.route("/add_task", methods=["POST"])
+def add_task():
+    pass
 
 
 # Run app #
 # Remove this when deploying to pythonanywhere
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=80, debug=True)
