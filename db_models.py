@@ -43,9 +43,7 @@ class Tasks(db.Model):
         self.task_weight = task_weight
 
     def add_list_to_tasksdb():
-        Tasks.query.delete()
-        db.session.commit()
-
+        db.session.query(Tasks).filter(Tasks.task_id >= 0).delete()
         db.session.execute(text("ALTER TABLE Tasks AUTO_INCREMENT = 1"))
         db.session.commit()
 
@@ -73,6 +71,11 @@ class Tasks(db.Model):
             {
                 "task_title": "Tvätta kläder",
                 "task_desc": "Fyll tvättmaskinen med nya kläder.",
+                "task_weight": 5,
+            },
+            {
+                "task_title": "Putsa fönster",
+                "task_desc": "Test test test",
                 "task_weight": 5,
             },
         ]
