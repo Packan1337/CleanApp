@@ -6,21 +6,18 @@
         <form action="tasks-form">
             <div class="mb-3">
                 <label for="tasks-lista" class="form-label">
-                    <h3>Välj uppgift</h3>
+                    <h3>Select Task</h3>
                 </label>
                 <select name="tasks-lista" id="tasks-lista" class="form-select">
-                    <option value="task1">Diska</option>
-                    <option value="task2">Dammsuga</option>
-                    <option value="task3">Städa toan</option>
-                    <option value="task4">Vattna blommor</option>
-                    <option value="task5">Slänga soporna</option>
-                    <option value="task6">Tvätta kläder</option>
+                    {% for task in tasks %}
+                    <option value="task{{ task.task_id }}">{{ task.task_title }}</option>
+                    {% endfor %}
                 </select>
             </div>
 
             <div class="mb-3">
                 <label for="användare-lista" class="form-label">
-                    <h3>Välj användare</h3>
+                    <h3>Select Profile</h3>
                 </label>
 
                 <select name="användare-lista" id="användare-lista" class="form-select">

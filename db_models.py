@@ -60,7 +60,7 @@ class Tasks(db.Model):
             },
             {
                 "task_title": "Diska",
-                "task_desc": "Diska det som finns i handfatet, ställ även in den disk som är diskad och torr.",
+                "task_desc": "Diska det som finns i handfatet.",
                 "task_weight": 5,
             },
             {
@@ -79,7 +79,7 @@ class Tasks(db.Model):
                 "task_weight": 5,
             },
         ]
-        # hej
+
         for task in tasks:
             new_task = Tasks(
                 task_title=task["task_title"],
