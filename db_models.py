@@ -45,6 +45,7 @@ class Tasks(db.Model):
         self.task_weight = task_weight
 
     def add_list_to_tasksdb():
+        db.session.query(AssignedTasks).filter(AssignedTasks.task_id >= 0).delete()
         db.session.query(Tasks).filter(Tasks.task_id >= 0).delete()
         db.session.execute(text("ALTER TABLE Tasks AUTO_INCREMENT = 1"))
         db.session.commit()
