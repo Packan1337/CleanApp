@@ -8,7 +8,7 @@ from flask import (
     session,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
-from db_models import db, User, Profiles
+from db_models import db, User, Profiles, Tasks, AssignedTasks
 
 app = Flask(__name__)
 app.secret_key = "secretkey"
@@ -21,7 +21,6 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 with app.app_context():
     db.create_all()
-
     Tasks.add_list_to_tasksdb()
 
 
