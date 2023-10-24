@@ -21,7 +21,14 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 with app.app_context():
     db.create_all()
-    Tasks.add_list_to_tasksdb()
+    Tasks.initialize_tasks()
+
+# WIP
+# @app.route("/")
+# @app.route("/index")
+# def index():
+#     assigned_tasks, profiles = AssignedTasks.query.all(), Profiles.query.all()
+#     return render_template("index.html")
 
 
 @app.route("/")
@@ -45,8 +52,12 @@ def add_user():
             email = request.form["email"]
             password = request.form["password"]
             hashed_password = generate_password_hash(password)
+
             new_user = User(
-                first_name, last_name, email=email, password=hashed_password
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                password=hashed_password
             )
 
             db.session.add(new_user)
@@ -110,7 +121,8 @@ def login():
         if user:
             if check_password_hash(user.password, password):
                 session["user"] = user.email
-                flash(f"Successfully logged in as: {session['user']}.", "success")
+                flash(
+                    f"Successfully logged in as: {session['user']}.", "success")
                 return redirect(url_for("index"))
             else:
                 flash("Incorrect password, try again.", "danger")
@@ -155,7 +167,11 @@ def add_profile():
             profile_name = request.form["profile_name"]
             profile_type = request.form["profile_type"]
 
-            new_profile = Profiles(user_id, profile_name, profile_type)
+            new_profile = Profiles(
+                user_id=user_id,
+                profile_name=profile_name,
+                profile_type=profile_type
+            )
 
             db.session.add(new_profile)
             db.session.commit()
@@ -167,7 +183,8 @@ def add_profile():
 
     except Exception as e:
         db.session.rollback()
-        flash(f"An error occurred while adding the profile: {str(e)}", "danger")
+        flash(
+            f"An error occurred while adding the profile: {str(e)}", "danger")
         return redirect(url_for("profile_manager"))
 
 
@@ -230,8 +247,8 @@ def task_management():
 
     # DETTA ÄR ETT EXEMPEL PÅ ATT LÄGGA TILL EN TASK TILL EN PROFILE!
     ##########################################
-    #result = AssignedTasks.assign_task_to_profile(task_id=1, profile_id=5)
-    #print(result["message"])
+    # result = AssignedTasks.assign_task_to_profile(task_id=1, profile_id=5)
+    # print(result["message"])
     ##########################################
 
     return render_template("task_management.html", profiles=profiles, tasks=tasks)
