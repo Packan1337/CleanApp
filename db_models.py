@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 
 db = SQLAlchemy()
 
@@ -40,6 +41,50 @@ class Tasks(db.Model):
         self.task_title = task_title
         self.task_desc = task_desc
         self.task_weight = task_weight
+
+    def add_list_to_tasksdb():
+        Tasks.query.delete()
+        db.session.commit()
+
+        db.session.execute(text("ALTER TABLE Tasks AUTO_INCREMENT = 1"))
+        db.session.commit()
+
+        tasks = [
+            {
+                "task_title": "Dammsuga",
+                "task_desc": "Dammsug alla rum i hemmet.",
+                "task_weight": 5,
+            },
+            {
+                "task_title": "Moppa golvet",
+                "task_desc": "Moppa golvet i hemmet.",
+                "task_weight": 5,
+            },
+            {
+                "task_title": "Diska",
+                "task_desc": "Diska det som finns i handfatet, ställ även in den disk som är diskad och torr.",
+                "task_weight": 5,
+            },
+            {
+                "task_title": "Fixa matlådor",
+                "task_desc": "Laga mat och lägg in det i matlådor.",
+                "task_weight": 5,
+            },
+            {
+                "task_title": "Tvätta kläder",
+                "task_desc": "Fyll tvättmaskinen med nya kläder.",
+                "task_weight": 5,
+            },
+        ]
+
+        for task in tasks:
+            new_task = Tasks(
+                task_title=task["task_title"],
+                task_desc=task["task_desc"],
+                task_weight=task["task_weight"],
+            )
+            db.session.add(new_task)
+        db.session.commit()
 
 
 class AssignedTasks(db.Model):
