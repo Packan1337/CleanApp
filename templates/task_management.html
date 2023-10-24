@@ -21,9 +21,13 @@
                 </label>
 
                 <select name="profil-lista" id="profil-lista" class="form-select">
+                    {% if profiles|length > 0 %}
                     {% for profile in profiles %}
-                    <option value="användare1">{{ profile.profile_name }}</option>
+                    <option value="{{ profile.id }}">{{ profile.profile_name }}</option>
                     {% endfor %}
+                    {% else %}
+                    <option value="no-profile">No profiles found</option>
+                    {% endif %}
                 </select>
             </div>
             <input type="submit" class="btn btn-primary" value="Tilldela">
