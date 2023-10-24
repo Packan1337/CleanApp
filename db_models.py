@@ -89,6 +89,21 @@ class Tasks(db.Model):
             db.session.add(new_task)
         db.session.commit()
 
+    @classmethod
+    def add_new_task(cls, task_title, task_desc):
+        if not task_title or not task_desc:
+            return {
+                "status": "failure",
+                "message": "Both title and description are required.",
+            }
+
+        new_task = cls(task_title=task_title, task_desc=task_desc, task_weight=5)
+
+        db.session.add(new_task)
+        db.session.commit()
+
+        return {"status": "success", "message": "Task added successfully!"}
+
 
 class AssignedTasks(db.Model):
     task_id = db.Column(db.Integer, db.ForeignKey("tasks.task_id"), primary_key=True)
