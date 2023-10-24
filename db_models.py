@@ -19,7 +19,7 @@ class User(db.Model):
 
 class Profiles(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     profile_name = db.Column(db.String(50), unique=False, nullable=False)
     profile_type = db.Column(db.String(50), unique=False, nullable=False)
     user = db.relationship("User", backref="profiles")
@@ -28,3 +28,24 @@ class Profiles(db.Model):
         self.user_id = user_id
         self.profile_name = profile_name
         self.profile_type = profile_type
+
+
+class Tasks(db.Model):
+    task_id = db.Column(db.Integer, primary_key=True)
+    task_title = db.Column(db.String(50), unique=False, nullable=False)
+    task_desc = db.Column(db.String(100), unique=False, nullable=False)
+    task_weight = db.Column(db.Integer, unique=False, nullable=False)
+
+    def __init__(self, task_title, task_desc, task_weight):
+        self.task_title = task_title
+        self.task_desc = task_desc
+        self.task_weight = task_weight
+
+
+class Assigned_Tasks(db.Model):
+    task_id = db.Column(db.Integer, db.ForeignKey("tasks.task_id"), primary_key=True)
+    profile_id = db.Column(db.Integer, db.ForeignKey("profiles.id"), primary_key=True)
+
+    def __init__(self, task_id, profile_id):
+        self.task_id = task_id
+        self.profile_id = profile_id
