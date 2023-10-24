@@ -41,3 +41,4 @@
 som nu insertar listan med tasks (dicts) och sedan kollar i dbn varje gång appen startas om task_title redan finns och lägger bara till de som inte finns.
 - Ändrade task_id till id i tabellen Tasks för att vara konsekvent med andra tabeller
 - La till ondelete="CASCADE" till profiles och assigned_tasks (task_id, profile_id) för att den datan också ska tas bort om usern tas bort (Om parent tas bort tas också children bort)
+- Ändrade "användare-lista" i dropdown-listorna i task_management.html till "profil-lista"
