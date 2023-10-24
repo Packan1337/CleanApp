@@ -79,7 +79,7 @@ class Tasks(db.Model):
                 "task_weight": 5,
             },
         ]
-
+        # hej
         for task in tasks:
             new_task = Tasks(
                 task_title=task["task_title"],
