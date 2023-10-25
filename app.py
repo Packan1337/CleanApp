@@ -9,6 +9,7 @@ from flask import (
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 from db_models import db, User, Profiles, Tasks, AssignedTasks
+from datetime import datetime, date
 
 app = Flask(__name__)
 app.secret_key = "secretkey"
@@ -22,13 +23,6 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
     Tasks.initialize_tasks()
-
-# WIP
-# @app.route("/")
-# @app.route("/index")
-# def index():
-#     assigned_tasks, profiles = AssignedTasks.query.all(), Profiles.query.all()
-#     return render_template("index.html")
 
 
 @app.route("/")
