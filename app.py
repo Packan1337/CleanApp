@@ -34,7 +34,21 @@ with app.app_context():
 @app.route("/")
 @app.route("/index")
 def index():
-    return render_template("index.html")
+    if "user" in session:
+        user_email = session["user"]
+        user = User.query.filter_by(email=user_email).first()
+
+        if user:
+            profiles = user.profiles
+        else:
+            flash("User does not exist.", "danger")
+            return redirect(url_for("login"))
+
+    else:
+        flash("Please log in to view this page.", "danger")
+        return redirect(url_for("login"))
+
+    return render_template("index.html", profiles = profiles)
 
 
 @app.route("/signup")

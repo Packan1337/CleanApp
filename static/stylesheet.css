@@ -379,3 +379,14 @@ h5 {
 #add-custom-task{
   margin-top: 10px;
 }
+
+.grid-container {
+  display: grid;
+  grid: 150px / auto auto auto;
+  grid-gap: 50px;
+}
+
+.grid-item {
+  grid-auto-flow: row;
+  
+}
