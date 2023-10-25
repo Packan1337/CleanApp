@@ -48,7 +48,7 @@ def index():
         flash("Please log in to view this page.", "danger")
         return redirect(url_for("login"))
 
-    return render_template("index.html", profiles = profiles)
+    return render_template("index.html", profiles=profiles)
 
 
 @app.route("/signup")
@@ -246,26 +246,21 @@ def task_management():
 
     tasks = Tasks.query.all()
 
-    # DETTA ÄR ETT EXEMPEL PÅ INMATNING AV EN NY TASK!
-    # TA BORT DENNA KOD NÄR FRONTENDEN ÄR KLAR!
-
-    # MAN VILL EXPERMINEERA MED ATT LÄGGA TILL EN NY TASK
-    # SÅ ÄR DET BARA ATT TA BORT KOMMENTAREN FRÅN KODEN NEDAN
-    ##########################################
-    # task_title = "Dammsuga 2"
-    # task_desc = "En beskrivning."
-
-    # response = Tasks.add_new_task(task_title, task_desc)
-    # print(response)
-    ##########################################
-
-    # DETTA ÄR ETT EXEMPEL PÅ ATT LÄGGA TILL EN TASK TILL EN PROFILE!
-    ##########################################
-    # result = AssignedTasks.assign_task_to_profile(task_id=1, profile_id=5)
-    # print(result["message"])
-    ##########################################
-
     return render_template("task_management.html", profiles=profiles, tasks=tasks)
+
+
+@app.route("/add_custom_task", methods=["POST"])
+def add_custom_task():
+    custom_task = request.form["custom-task-input"]
+    if custom_task:
+        new_task = Tasks(task_title=custom_task, task_desc="", task_weight=5)
+        db.session.add(new_task)
+        db.session.commit()
+        flash("Task added successfully.", "success")
+    else:
+        flash("Invalid task name.", "danger")
+
+    return redirect(url_for("task_management"))
 
 
 @app.route("/add_task", methods=["POST"])
