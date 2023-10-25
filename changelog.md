@@ -44,3 +44,12 @@ som nu insertar listan med tasks (dicts) och sedan kollar i dbn varje gång appe
 - Ändrade "användare-lista" i dropdown-listorna i task_management.html till "profil-lista"
 - Ändrade "value" för profilerna i dropdown-listorna till profil-namn istället för "användare1"
 - La till en check för profil-listan i task_management.html, om den är tom så visas ett meddelande istället för en tom lista
+
+# 2023-10-26 - Charlie, sprint 4
+## Generella ändringar/tillägg
+- La till en textruta för task-description i task_management.html
+- La till datum och vecka i index.html
+- Strukturerade om/snyggade till generellt i task_management.html
+- La till ett meddelande i index.html om det inte finns några profiler
+- Fixade om lite/fixade en bugg i databasen med cascade så att det nu funkar som tänkt
+

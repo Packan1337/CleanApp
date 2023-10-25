@@ -21,7 +21,8 @@ class Profiles(db.Model):
     profile_name = db.Column(db.String(50), unique=False, nullable=False)
     profile_type = db.Column(db.String(50), unique=False, nullable=False)
     user = db.relationship("User", backref="profiles")
-    assigned_tasks = db.relationship("AssignedTasks", backref="profile")
+    assigned_tasks = db.relationship(
+        'AssignedTasks', backref='profile', lazy='dynamic', cascade='delete, delete-orphan')
 
 
 class Tasks(db.Model):
@@ -59,11 +60,6 @@ class Tasks(db.Model):
                 "task_desc": "Fyll tvättmaskinen med nya kläder.",
                 "task_weight": 5,
             },
-            {
-                "task_title": "Tvätta kläder2",
-                "task_desc": "Fyll tvättmaskinen med nya kläder.",
-                "task_weight": 5,
-            },
         ]
 
         tasks_dict = {task["task_title"]: task for task in default_tasks}
@@ -82,22 +78,6 @@ class Tasks(db.Model):
 
         db.session.commit()
 
-    @classmethod
-    def add_new_task(cls, task_title, task_desc):
-        if not task_title or not task_desc:
-            return {
-                "status": "failure",
-                "message": "Both title and description are required.",
-            }
-
-        new_task = cls(task_title=task_title,
-                       task_desc=task_desc, task_weight=5)
-
-        db.session.add(new_task)
-        db.session.commit()
-
-        return {"status": "success", "message": "Task added successfully!"}
-
 
 class AssignedTasks(db.Model):
     __tablename__ = "assigned_tasks"
@@ -105,23 +85,3 @@ class AssignedTasks(db.Model):
         "tasks.id", ondelete="CASCADE"), primary_key=True)
     profile_id = db.Column(db.Integer, db.ForeignKey(
         "profiles.id", ondelete="CASCADE"), primary_key=True)
-
-    @classmethod
-    def assign_task_to_profile(cls, task_id, profile_id):
-        existing_assignment = cls.query.filter_by(
-            task_id=task_id, profile_id=profile_id
-        ).first()
-        if existing_assignment:
-            return {
-                "status": "failure",
-                "message": "The task is already assigned to this profile.",
-            }
-
-        assignment = cls(task_id=task_id, profile_id=profile_id)
-        db.session.add(assignment)
-        db.session.commit()
-
-        return {
-            "status": "success",
-            "message": "Task successfully assigned to profile!",
-        }

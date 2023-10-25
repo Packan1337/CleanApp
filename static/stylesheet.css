@@ -354,6 +354,7 @@ h5 {
   vertical-align: middle;
 }
 
+/* Ikoner för profilerna */
 .edit-icon {
   width: 20px;
   height: 20px;
@@ -366,11 +367,21 @@ h5 {
   margin-right: auto;
 }
 
-/* Ta bort margin? Ser konstigt ut när inga profiler existerar */
-.lägg-till-profil {
-  margin-top: 50px;
-}
-
 #lägg-till-profil-knapp {
   margin-right: 10px;
+}
+
+#add-custom-task{
+  margin-top: 10px;
+}
+
+.grid-container {
+  display: grid;
+  grid: 150px / auto auto auto;
+  grid-gap: 50px;
+}
+
+.grid-item {
+  grid-auto-flow: row;
+  
 }
