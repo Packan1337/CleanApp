@@ -374,3 +374,13 @@ h5 {
 #lägg-till-profil-knapp {
   margin-right: 10px;
 }
+
+.grid-container {
+  display: grid;
+  grid: 150px / auto auto auto;
+  grid-gap: 50px;
+}
+.grid-item {
+  grid-auto-flow: row;
+  
+}
