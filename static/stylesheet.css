@@ -354,6 +354,7 @@ h5 {
   vertical-align: middle;
 }
 
+/* Ikoner för profilerna */
 .edit-icon {
   width: 20px;
   height: 20px;
@@ -373,4 +374,8 @@ h5 {
 
 #lägg-till-profil-knapp {
   margin-right: 10px;
+}
+
+#add-custom-task{
+  margin-top: 10px;
 }

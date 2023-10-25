@@ -1,6 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
 
+<head>
+    <link rel="stylesheet" href="stylesheet.css">
+</head>
+
 <body class="body">
     <div class="d-flex mt-4">
         <form action="tasks-form">
@@ -16,21 +20,30 @@
             </div>
 
             <div class="mb-3">
-                <label for="profil-lista" class="form-label">
+                <label for="användare-lista" class="form-label">
                     <h3>Select Profile</h3>
                 </label>
-
-                <select name="profil-lista" id="profil-lista" class="form-select">
-                    {% if profiles|length > 0 %}
+                <select name="användare-lista" id="användare-lista" class="form-select">
                     {% for profile in profiles %}
-                    <option value="{{ profile.id }}">{{ profile.profile_name }}</option>
+                    <option value="användare1">{{ profile.profile_name }}</option>
                     {% endfor %}
-                    {% else %}
-                    <option value="no-profile">No profiles found</option>
-                    {% endif %}
                 </select>
             </div>
-            <input type="submit" class="btn btn-primary" value="Tilldela">
+
+            <input type="submit" class="btn btn-primary" value="Assign">
+        </form>
+
+        <form id="add-custom-task-form" action="{{ url_for('add_custom_task') }}" method="post">
+            <div class="mb-3 mx-5">
+                <label for="custom-task-input" class="form-label">
+                    <h3>Custom Task</h3>
+                </label>
+                <input type="text" name="custom-task-input" id="custom-task-input" class="form-control"
+                    placeholder="Enter a custom task">
+
+                <input name="add-custom-task" type="submit" class="btn btn-primary" id="add-custom-task"
+                    value="Add"></input>
+            </div>
         </form>
     </div>
 </body>
