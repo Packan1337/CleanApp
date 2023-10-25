@@ -34,21 +34,23 @@ with app.app_context():
 @app.route("/")
 @app.route("/index")
 def index():
+    today = date.today()
+    current_week_number = today.isocalendar()[1]
+
     if "user" in session:
         user_email = session["user"]
         user = User.query.filter_by(email=user_email).first()
 
         if user:
-            profiles = user.profiles
+            profiles = Profiles.query.filter_by(user_id=user.id).all()
         else:
             flash("User does not exist.", "danger")
             return redirect(url_for("login"))
-
     else:
         flash("Please log in to view this page.", "danger")
         return redirect(url_for("login"))
 
-    return render_template("index.html", profiles=profiles)
+    return render_template("index.html", profiles=profiles, week_number=current_week_number, today=today)
 
 
 @app.route("/signup")
@@ -209,7 +211,8 @@ def delete_profile(profile_id):
         db.session.delete(profile)
         db.session.commit()
         flash("Profile deleted successfully.", "success")
-    except:
+    except Exception as e:
+        print(e)
         db.session.rollback()
         flash("Error deleting profile.", "danger")
     return redirect(url_for("profile_manager"))
@@ -252,8 +255,10 @@ def task_management():
 @app.route("/add_custom_task", methods=["POST"])
 def add_custom_task():
     custom_task = request.form["custom-task-input"]
+    custom_task_description = request.form["custom-task-description"]
     if custom_task:
-        new_task = Tasks(task_title=custom_task, task_desc="", task_weight=5)
+        new_task = Tasks(task_title=custom_task,
+                         task_desc=custom_task_description, task_weight=5)
         db.session.add(new_task)
         db.session.commit()
         flash("Task added successfully.", "success")
@@ -263,9 +268,33 @@ def add_custom_task():
     return redirect(url_for("task_management"))
 
 
-@app.route("/add_task", methods=["POST"])
-def add_task():
-    pass
+@app.route("/assign_tasks", methods=["POST"])
+def assign_tasks():
+    task_id = request.form.get("task_id")
+    profile_id = request.form.get("profile_id")
+
+    try:
+        task_id = int(task_id)
+        profile_id = int(profile_id)
+    except ValueError:
+        flash("Invalid task or profile ID.", "danger")
+        return redirect(url_for("task_management"))
+
+    try:
+        new_assigned_task = AssignedTasks(
+            task_id=task_id,
+            profile_id=profile_id,
+        )
+
+        db.session.add(new_assigned_task)
+        db.session.commit()
+        flash("Task assigned successfully.", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash(
+            f"An error occurred while assigning the task: {str(e)}", "danger")
+
+    return redirect(url_for("task_management"))
 
 
 # Run app #

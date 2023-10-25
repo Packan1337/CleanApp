@@ -1,50 +1,63 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<head>
-    <link rel="stylesheet" href="stylesheet.css">
-</head>
-
 <body class="body">
-    <div class="d-flex mt-4">
-        <form action="tasks-form">
-            <div class="mb-3">
-                <label for="tasks-lista" class="form-label">
-                    <h3>Select Task</h3>
-                </label>
-                <select name="tasks-lista" id="tasks-lista" class="form-select">
-                    {% for task in tasks %}
-                    <option value="task{{ task.task_id }}">{{ task.task_title }}</option>
-                    {% endfor %}
-                </select>
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6 mb-4">
+                <form action="/assign_tasks" method="post">
+                    <h3 class="mb-3">Assign Tasks</h3>
+                    <div class="mb-3">
+                        <label for="tasks-lista" class="form-label">
+                            <h5>Select Task</h5>
+                        </label>
+                        <select name="task_id" id="tasks-lista" class="form-select">
+                            {% for task in tasks %}
+                            <option value="{{ task.id }}">{{ task.task_title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="profil-lista" class="form-label">
+                            <h5>Select Profile</h5>
+                        </label>
+
+                        <select name="profile_id" id="profile_id" class="form-select">
+                            {% if profiles|length > 0 %}
+                            {% for profile in profiles %}
+                            <option value="{{ profile.id }}">{{ profile.profile_name }}</option>
+                            {% endfor %}
+                            {% else %}
+                            <option value="no-profile">No profiles found</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="Assign task">
+                </form>
             </div>
 
-            <div class="mb-3">
-                <label for="användare-lista" class="form-label">
-                    <h3>Select Profile</h3>
-                </label>
-                <select name="användare-lista" id="användare-lista" class="form-select">
-                    {% for profile in profiles %}
-                    <option value="användare1">{{ profile.profile_name }}</option>
-                    {% endfor %}
-                </select>
+            <div class="col-md-6 mb-4">
+                <form id="add-custom-task-form" action="{{ url_for('add_custom_task') }}" method="post">
+                    <h3 class="mb-3">Custom Tasks</h3>
+                    <div class="mb-3">
+                        <label for="custom-task-input" class="form-label">
+                            <h5>Task Name</h5>
+                        </label>
+                        <input type="text" name="custom-task-input" id="custom-task-input" class="form-control"
+                            placeholder="Enter a custom task">
+                    </div>
+                    <div class="mb-3">
+                        <label for="custom-task-description" class="form-label">
+                            <h5>Task Description</h5>
+                        </label>
+                        <textarea name="custom-task-description" id="custom-task-description" class="form-control"
+                            rows="2" placeholder="Enter a description for the task" required></textarea>
+                    </div>
+                    <input name="add-custom-task" type="submit" class="btn btn-primary" id="add-custom-task"
+                        value="Add task">
+                </form>
             </div>
-
-            <input type="submit" class="btn btn-primary" value="Assign">
-        </form>
-
-        <form id="add-custom-task-form" action="{{ url_for('add_custom_task') }}" method="post">
-            <div class="mb-3 mx-5">
-                <label for="custom-task-input" class="form-label">
-                    <h3>Custom Task</h3>
-                </label>
-                <input type="text" name="custom-task-input" id="custom-task-input" class="form-control"
-                    placeholder="Enter a custom task">
-
-                <input name="add-custom-task" type="submit" class="btn btn-primary" id="add-custom-task"
-                    value="Add"></input>
-            </div>
-        </form>
+        </div>
     </div>
 </body>
 {% endblock %}
