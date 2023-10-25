@@ -8,7 +8,7 @@ from flask import (
     session,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
-from db_models import db, User, Profiles
+from db_models import db, User, Profiles, Tasks, AssignedTasks
 
 app = Flask(__name__)
 app.secret_key = "secretkey"
@@ -21,10 +21,18 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 with app.app_context():
     db.create_all()
+    Tasks.initialize_tasks()
+
+# WIP
+# @app.route("/")
+# @app.route("/index")
+# def index():
+#     assigned_tasks, profiles = AssignedTasks.query.all(), Profiles.query.all()
+#     return render_template("index.html")
 
 
-@app.route('/')
-@app.route('/index')
+@app.route("/")
+@app.route("/index")
 def index():
     return render_template("index.html")
 
@@ -44,8 +52,12 @@ def add_user():
             email = request.form["email"]
             password = request.form["password"]
             hashed_password = generate_password_hash(password)
+
             new_user = User(
-                first_name, last_name, email=email, password=hashed_password
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                password=hashed_password
             )
 
             db.session.add(new_user)
@@ -130,11 +142,11 @@ def logout():
 
 @app.route("/profile_manager")
 def profile_manager():
-    if 'user' not in session:
+    if "user" not in session:
         flash("Please log in to view this page.", "danger")
         return redirect(url_for("login"))
     else:
-        user = User.query.filter_by(email=session['user']).first()
+        user = User.query.filter_by(email=session["user"]).first()
         if user:
             profiles = user.profiles
         else:
@@ -145,7 +157,7 @@ def profile_manager():
 @app.route("/add_profile", methods=["POST"])
 def add_profile():
     try:
-        user = User.query.filter_by(email=session['user']).first()
+        user = User.query.filter_by(email=session["user"]).first()
         if user is None:
             flash(f"User: {user.email} does not exist.", "danger")
             return redirect(url_for("profile_manager"))
@@ -156,14 +168,17 @@ def add_profile():
             profile_type = request.form["profile_type"]
 
             new_profile = Profiles(
-                user_id, profile_name, profile_type
+                user_id=user_id,
+                profile_name=profile_name,
+                profile_type=profile_type
             )
 
             db.session.add(new_profile)
             db.session.commit()
 
             flash(
-                f"Profile: {new_profile.profile_name} created successfully.", "success")
+                f"Profile: {new_profile.profile_name} created successfully.", "success"
+            )
             return redirect(url_for("profile_manager"))
 
     except Exception as e:
@@ -201,8 +216,8 @@ def edit_profile(profile_id):
 
 @app.route("/task_management")
 def task_management():
-    if 'user' in session:
-        user_email = session['user']
+    if "user" in session:
+        user_email = session["user"]
         user = User.query.filter_by(email=user_email).first()
 
         if user:
@@ -215,10 +230,36 @@ def task_management():
         flash("Please log in to view this page.", "danger")
         return redirect(url_for("login"))
 
-    return render_template("task_management.html", profiles=profiles)
+    tasks = Tasks.query.all()
+
+    # DETTA ÄR ETT EXEMPEL PÅ INMATNING AV EN NY TASK!
+    # TA BORT DENNA KOD NÄR FRONTENDEN ÄR KLAR!
+
+    # MAN VILL EXPERMINEERA MED ATT LÄGGA TILL EN NY TASK
+    # SÅ ÄR DET BARA ATT TA BORT KOMMENTAREN FRÅN KODEN NEDAN
+    ##########################################
+    # task_title = "Dammsuga 2"
+    # task_desc = "En beskrivning."
+
+    # response = Tasks.add_new_task(task_title, task_desc)
+    # print(response)
+    ##########################################
+
+    # DETTA ÄR ETT EXEMPEL PÅ ATT LÄGGA TILL EN TASK TILL EN PROFILE!
+    ##########################################
+    # result = AssignedTasks.assign_task_to_profile(task_id=1, profile_id=5)
+    # print(result["message"])
+    ##########################################
+
+    return render_template("task_management.html", profiles=profiles, tasks=tasks)
+
+
+@app.route("/add_task", methods=["POST"])
+def add_task():
+    pass
 
 
 # Run app #
 # Remove this when deploying to pythonanywhere
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=80, debug=True)

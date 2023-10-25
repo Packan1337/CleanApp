@@ -6,27 +6,28 @@
         <form action="tasks-form">
             <div class="mb-3">
                 <label for="tasks-lista" class="form-label">
-                    <h3>Välj uppgift</h3>
+                    <h3>Select Task</h3>
                 </label>
                 <select name="tasks-lista" id="tasks-lista" class="form-select">
-                    <option value="task1">Diska</option>
-                    <option value="task2">Dammsuga</option>
-                    <option value="task3">Städa toan</option>
-                    <option value="task4">Vattna blommor</option>
-                    <option value="task5">Slänga soporna</option>
-                    <option value="task6">Tvätta kläder</option>
+                    {% for task in tasks %}
+                    <option value="task{{ task.task_id }}">{{ task.task_title }}</option>
+                    {% endfor %}
                 </select>
             </div>
 
             <div class="mb-3">
-                <label for="användare-lista" class="form-label">
-                    <h3>Välj användare</h3>
+                <label for="profil-lista" class="form-label">
+                    <h3>Select Profile</h3>
                 </label>
 
-                <select name="användare-lista" id="användare-lista" class="form-select">
+                <select name="profil-lista" id="profil-lista" class="form-select">
+                    {% if profiles|length > 0 %}
                     {% for profile in profiles %}
-                    <option value="användare1">{{ profile.profile_name }}</option>
+                    <option value="{{ profile.id }}">{{ profile.profile_name }}</option>
                     {% endfor %}
+                    {% else %}
+                    <option value="no-profile">No profiles found</option>
+                    {% endif %}
                 </select>
             </div>
             <input type="submit" class="btn btn-primary" value="Tilldela">
@@ -34,29 +35,3 @@
     </div>
 </body>
 {% endblock %}
-
-<!-- <body class="body">
-    <form action="tasks-form" style="padding: 20px;">
-        <label for="tasks-lista">Välj uppgift</label>
-        <br>
-        <select name="tasks-lista" id="tasks-lista" style="background-color: #0d6efd">
-            <option value="task1">Diska</option>
-            <option value="task2">Dammsuga</option>
-            <option value="task3">Städa toan</option>
-            <option value="task4">Vattna blommor</option>
-            <option value="task5">Slänga soporna</option>
-            <option value="task6">Tvätta kläder</option>
-        </select>
-        <br>
-        <br>
-        <label for="användare-lista">Välj användare</label>
-        <br>
-        <select name="tasks-lista" id="tasks-lista" style="background-color: #0d6efd">
-            <option value="användare1">Användare 1</option>
-            <option value="användare2">Användare 2</option>
-        </select>
-        <br>
-        <br>
-        <input id ="task-val" type="submit" value="Tilldela" style="background-color: #0d6efd">
-    </form>
-</body> -->

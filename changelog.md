@@ -30,3 +30,17 @@
 ## Bugfixes
 - Fixade felhantering för "Manage profiles" + "Manage tasks", nu ombeds man logga in om man inte är det istället för att få ett error
 - Fixade fetchen för profilerna i "Manage tasks", nu hämtas bara profilerna för den inloggade användaren
+
+# 2023-10-24 - Charlie, sprint 4
+## Ändringar på db_models.py, app.py
+- Ändrade hur tabellerna skapas, tog bort __init__ delarna helt då detta är onödigt och kan skapa problem.
+    - I app.py behövdes då koden för new_user ändras (från positional args till keyword args)
+    - La till __tablename__ för att explicit sätta namn på tabellerna för att undvika problem
+    - Ändrade task_title i Tasks till unique=True för att undvika att samma task läggs till flera gånger
+- Ändrade hela add_list_to_taskdb funktionen till "initialize_tasks", 
+som nu insertar listan med tasks (dicts) och sedan kollar i dbn varje gång appen startas om task_title redan finns och lägger bara till de som inte finns.
+- Ändrade task_id till id i tabellen Tasks för att vara konsekvent med andra tabeller
+- La till ondelete="CASCADE" till profiles och assigned_tasks (task_id, profile_id) för att den datan också ska tas bort om usern tas bort (Om parent tas bort tas också children bort)
+- Ändrade "användare-lista" i dropdown-listorna i task_management.html till "profil-lista"
+- Ändrade "value" för profilerna i dropdown-listorna till profil-namn istället för "användare1"
+- La till en check för profil-listan i task_management.html, om den är tom så visas ett meddelande istället för en tom lista
