@@ -25,13 +25,12 @@ class Profiles(db.Model):
         'AssignedTasks', backref='profile', lazy='dynamic', cascade='delete, delete-orphan')
 
 
-class Tasks(db.Model):
-    __tablename__ = "tasks"
+class DefaultTasks(db.Model):
+    __tablename__ = "default_tasks"
     id = db.Column(db.Integer, primary_key=True)
     task_title = db.Column(db.String(50), unique=True, nullable=False)
     task_desc = db.Column(db.String(100), unique=False, nullable=False)
     task_weight = db.Column(db.Integer, unique=False, nullable=False)
-    assignments = db.relationship("AssignedTasks", backref="task")
 
     def initialize_tasks():
         default_tasks = [
@@ -64,12 +63,12 @@ class Tasks(db.Model):
 
         tasks_dict = {task["task_title"]: task for task in default_tasks}
 
-        existing_tasks = Tasks.query.all()
+        existing_tasks = DefaultTasks.query.all()
         existing_task_titles = set(task.task_title for task in existing_tasks)
 
         for task_title, task_data in tasks_dict.items():
             if task_title not in existing_task_titles:
-                new_task = Tasks(
+                new_task = DefaultTasks(
                     task_title=task_data["task_title"],
                     task_desc=task_data["task_desc"],
                     task_weight=task_data["task_weight"],
@@ -79,9 +78,21 @@ class Tasks(db.Model):
         db.session.commit()
 
 
+class CustomTasks(db.Model):
+    __tablename__ = "custom_tasks"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.id", ondelete="CASCADE"))
+    task_title = db.Column(db.String(50), unique=False, nullable=False)
+    task_desc = db.Column(db.String(100), unique=False, nullable=False)
+    task_weight = db.Column(db.Integer, unique=False, nullable=False)
+    user = db.relationship("User", backref="task")
+    user = db.relationship("User", backref=db.backref('custom_tasks', lazy=True))
+
+
 class AssignedTasks(db.Model):
     __tablename__ = "assigned_tasks"
     task_id = db.Column(db.Integer, db.ForeignKey(
-        "tasks.id", ondelete="CASCADE"), primary_key=True)
+        "default_tasks.id", ondelete="CASCADE"), primary_key=True)
     profile_id = db.Column(db.Integer, db.ForeignKey(
         "profiles.id", ondelete="CASCADE"), primary_key=True)
