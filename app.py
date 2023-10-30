@@ -8,7 +8,7 @@ from flask import (
     session,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
-from db_models import db, User, Profiles, Tasks, AssignedTasks
+from db_models import db, User, Profiles, AssignedTasks, Tasks
 from datetime import datetime, date
 
 app = Flask(__name__)
@@ -25,26 +25,26 @@ with app.app_context():
     Tasks.initialize_tasks()
 
 
-@app.route("/")
 @app.route("/index")
 def index():
-    today = date.today()
-    current_week_number = today.isocalendar()[1]
-
     if "user" in session:
         user_email = session["user"]
         user = User.query.filter_by(email=user_email).first()
 
         if user:
-            profiles = Profiles.query.filter_by(user_id=user.id).all()
+            profiles = user.profiles
         else:
             flash("User does not exist.", "danger")
             return redirect(url_for("login"))
+
+        # Get the current date and week number
+        today = date.today().strftime('%Y-%m-%d')
+        current_week_number = date.today().isocalendar()[1]
+
+        return render_template("index.html", profiles=profiles, week_number=current_week_number, today=today)
     else:
         flash("Please log in to view this page.", "danger")
         return redirect(url_for("login"))
-
-    return render_template("index.html", profiles=profiles, week_number=current_week_number, today=today)
 
 
 @app.route("/signup")
@@ -120,6 +120,7 @@ def reset_password():
     return redirect(url_for("login"))
 
 
+@app.route("/")
 @app.route("/login", methods=["GET", "POST"])
 def login():
     error = None
@@ -233,6 +234,9 @@ def task_management():
 
         if user:
             profiles = user.profiles
+            custom_tasks = Tasks.query.filter_by(user_id=user.id).all()
+            default_tasks = Tasks.query.filter_by(user_id=None).all()
+            tasks = default_tasks + custom_tasks
         else:
             flash("User does not exist.", "danger")
             return redirect(url_for("login"))
@@ -241,18 +245,18 @@ def task_management():
         flash("Please log in to view this page.", "danger")
         return redirect(url_for("login"))
 
-    tasks = Tasks.query.all()
-
     return render_template("task_management.html", profiles=profiles, tasks=tasks)
 
 
 @app.route("/add_custom_task", methods=["POST"])
 def add_custom_task():
-    custom_task = request.form["custom-task-input"]
+    user = User.query.filter_by(email=session["user"]).first()
+    custom_task_title = request.form["custom-task-input"]
     custom_task_description = request.form["custom-task-description"]
-    if custom_task:
-        new_task = Tasks(task_title=custom_task,
-                         task_desc=custom_task_description, task_weight=5)
+
+    if custom_task_title:
+        new_task = Tasks(task_title=custom_task_title, task_desc=custom_task_description,
+                         task_weight=5, task_type="custom", user_id=user.id)
         db.session.add(new_task)
         db.session.commit()
         flash("Task added successfully.", "success")
