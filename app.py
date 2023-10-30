@@ -25,7 +25,6 @@ with app.app_context():
     Tasks.initialize_tasks()
 
 
-@app.route("/")
 @app.route("/index")
 def index():
     today = date.today()
@@ -119,7 +118,7 @@ def reset_password():
     flash("Password successfully updated!", "success")
     return redirect(url_for("login"))
 
-
+@app.route("/")
 @app.route("/login", methods=["GET", "POST"])
 def login():
     error = None
