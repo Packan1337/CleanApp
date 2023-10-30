@@ -22,7 +22,7 @@ class Profiles(db.Model):
     profile_name = db.Column(db.String(50))
     profile_type = db.Column(db.String(50))
     assigned_tasks = db.relationship(
-        'AssignedTasks', backref='profile', lazy=True)
+        'AssignedTasks', backref='profile', lazy=True, cascade="all, delete-orphan")
 
 
 class Tasks(db.Model):
