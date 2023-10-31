@@ -11,8 +11,10 @@ class User(db.Model):
     last_name = db.Column(db.String(50))
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(300))
-    profiles = db.relationship('Profiles', backref='user', lazy=True)
-    tasks = db.relationship('Tasks', backref='user', lazy=True)
+    profiles = db.relationship(
+        'Profiles', backref='user', lazy=True, cascade="all, delete-orphan")
+    tasks = db.relationship('Tasks', backref='user',
+                            lazy=True, cascade="all, delete-orphan")
 
 
 class Profiles(db.Model):
@@ -31,7 +33,7 @@ class Tasks(db.Model):
     task_title = db.Column(db.String(100))
     task_desc = db.Column(db.String(200))
     task_weight = db.Column(db.Integer)
-    task_type = db.Column(db.String(20))  # Can be 'default' or 'custom'
+    task_type = db.Column(db.String(20))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
 
     def initialize_tasks():
