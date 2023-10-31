@@ -50,12 +50,12 @@
                     data-bs-toggle="dropdown">
                     <small class="mx-2" id="logged-in-div">
                         {% if session.get("user") %}
-                        Logged in as:
+                        Loggad in som:
                         {% if session.get("user") %}
                         {{ session["user"] }}
                         {% endif %}
                         {% else %}
-                        Not logged in
+                        Ej inloggad
                         {% endif %}
                     </small>
                     <svg id="profile-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -93,7 +93,7 @@
                     0-16-7.2-16-16V80c0-8.8 7.2-16 16-16h32zm16 112v32c0 8.8-7.2 16-16 16H368c-8.8 0-16-7.2-16-16V176c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16z" />
                     </svg>
                 </a>
-                <span class="fs-4 mx-3">Household 1</span>
+                <span class="fs-4 mx-3">Hushåll 1</span>
             </div>
             <hr>
             <ul class="nav nav-pills flex-column mb-auto">
@@ -102,7 +102,7 @@
                         <svg class="bi me-2" width="16" height="16">
                             <use xlink:href="#home"></use>
                         </svg>
-                        Home
+                        Hem
                     </a>
                 </li>
                 <li>
@@ -110,7 +110,7 @@
                         <svg class="bi me-2" width="16" height="16">
                             <use xlink:href="#speedometer2"></use>
                         </svg>
-                        Manage Tasks
+                        Hantera uppgifter
                     </a>
                 </li>
                 <li>
@@ -118,7 +118,7 @@
                         <svg class="bi me-2" width="16" height="16">
                             <use xlink:href="#table"></use>
                         </svg>
-                        Manage Profiles
+                        Profilhantering
                     </a>
                 </li>
             </ul>

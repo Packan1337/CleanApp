@@ -34,7 +34,7 @@ def index():
         if user:
             profiles = user.profiles
         else:
-            flash("User does not exist.", "danger")
+            flash("Användaren finns inte.", "danger")
             return redirect(url_for("login"))
 
         # Get the current date and week number
@@ -43,7 +43,7 @@ def index():
 
         return render_template("index.html", profiles=profiles, week_number=current_week_number, today=today)
     else:
-        flash("Please log in to view this page.", "danger")
+        flash("Vänligen logga in för att visa den här sidan.", "danger")
         return redirect(url_for("login"))
 
 
@@ -74,15 +74,15 @@ def add_user():
             db.session.commit()
 
         else:
-            flash(f"User: {user.email} already exists.", "danger")
+            flash(f"Användaren: {user.email} finns redan.", "danger")
             return redirect(url_for("signup"))
 
-        flash(f"User: {new_user.email} created successfully.", "success")
+        flash(f"Användaren: {new_user.email} har skapats.", "success")
         return redirect(url_for("login"))
 
     except Exception as e:
         db.session.rollback()
-        flash(f"An error occurred while adding the user: {str(e)}", "danger")
+        flash(f"Ett fel uppstod när användaren skulle läggas till: {str(e)}", "danger")
         return redirect(url_for("signup"))
 
 
@@ -99,24 +99,24 @@ def reset_password():
     new_password_repeat = request.form.get("new_password_repeat")
 
     if new_password != new_password_repeat:
-        flash("Passwords do not match!", "danger")
+        flash("Lösenordet matchar inte", "danger")
         return redirect(url_for("reset_password_page"))
 
     user = User.query.filter_by(email=email).first()
 
     if not user:
-        flash("User with the provided email does not exist!", "danger")
+        flash("Användaren med den angivna e-postadressen finns inte!", "danger")
         return redirect(url_for("reset_password_page"))
 
     if not check_password_hash(user.password, current_password):
-        flash("Current password is incorrect!", "danger")
+        flash("Aktuella lösenordet är felaktigt!", "danger")
         return redirect(url_for("reset_password_page"))
 
     user.password = generate_password_hash(new_password)
 
     db.session.commit()
 
-    flash("Password successfully updated!", "success")
+    flash("Lösenordet har uppdaterats!", "success")
     return redirect(url_for("login"))
 
 
@@ -133,13 +133,13 @@ def login():
             if check_password_hash(user.password, password):
                 session["user"] = user.email
                 flash(
-                    f"Successfully logged in as: {session['user']}.", "success")
+                    f"Har loggat in som: {session['user']}.", "success")
                 return redirect(url_for("index"))
             else:
-                flash("Incorrect password, try again.", "danger")
+                flash("Felaktigt lösenord, försök igen.", "danger")
 
         else:
-            flash("Email does not exist.", "danger")
+            flash("E-post finns inte.", "danger")
 
     return render_template("login.html")
 
@@ -147,14 +147,14 @@ def login():
 @app.route("/logout")
 def logout():
     session.pop("user", None)
-    flash("Successfully logged out.", "success")
+    flash("Har loggats ut.", "success")
     return redirect(url_for("login"))
 
 
 @app.route("/profile_manager")
 def profile_manager():
     if "user" not in session:
-        flash("Please log in to view this page.", "danger")
+        flash("Logga in för att se denna sida.", "danger")
         return redirect(url_for("login"))
     else:
         user = User.query.filter_by(email=session["user"]).first()
@@ -170,7 +170,7 @@ def add_profile():
     try:
         user = User.query.filter_by(email=session["user"]).first()
         if user is None:
-            flash(f"User: {user.email} does not exist.", "danger")
+            flash(f"Användare: {user.email} finns inte.", "danger")
             return redirect(url_for("profile_manager"))
 
         else:
@@ -188,14 +188,14 @@ def add_profile():
             db.session.commit()
 
             flash(
-                f"Profile: {new_profile.profile_name} created successfully.", "success"
+                f"Profil: {new_profile.profile_name} skapades.", "success"
             )
             return redirect(url_for("profile_manager"))
 
     except Exception as e:
         db.session.rollback()
         flash(
-            f"An error occurred while adding the profile: {str(e)}", "danger")
+            f"Ett fel uppstod när profilen skulle läggas till: {str(e)}", "danger")
         return redirect(url_for("profile_manager"))
 
 
@@ -205,11 +205,11 @@ def delete_profile(profile_id):
     try:
         db.session.delete(profile)
         db.session.commit()
-        flash("Profile deleted successfully.", "success")
+        flash("Profilen har tagits bort.", "success")
     except Exception as e:
         print(e)
         db.session.rollback()
-        flash("Error deleting profile.", "danger")
+        flash("Fel vid borttagning av profil.", "danger")
     return redirect(url_for("profile_manager"))
 
 
@@ -220,9 +220,9 @@ def edit_profile(profile_id):
     if new_name:
         profile.profile_name = new_name
         db.session.commit()
-        flash("Profile name updated successfully.", "success")
+        flash("Profilnamnet har uppdaterats.", "success")
     else:
-        flash("Invalid name.", "danger")
+        flash("Ogiltigt namn.", "danger")
     return redirect(url_for("profile_manager"))
 
 
@@ -238,11 +238,11 @@ def task_management():
             default_tasks = Tasks.query.filter_by(user_id=None).all()
             tasks = default_tasks + custom_tasks
         else:
-            flash("User does not exist.", "danger")
+            flash("Användare finns inte.", "danger")
             return redirect(url_for("login"))
 
     else:
-        flash("Please log in to view this page.", "danger")
+        flash("Logga in för att se denna sida.", "danger")
         return redirect(url_for("login"))
 
     return render_template("task_management.html", profiles=profiles, tasks=tasks)
@@ -259,9 +259,9 @@ def add_custom_task():
                          task_weight=5, task_type="custom", user_id=user.id)
         db.session.add(new_task)
         db.session.commit()
-        flash("Task added successfully.", "success")
+        flash("Uppgiften har lagts till.", "success")
     else:
-        flash("Invalid task name.", "danger")
+        flash("Ogiltigt uppgiftsnamn.", "danger")
 
     return redirect(url_for("task_management"))
 
@@ -275,7 +275,7 @@ def assign_tasks():
         task_id = int(task_id)
         profile_id = int(profile_id)
     except ValueError:
-        flash("Invalid task or profile ID.", "danger")
+        flash("Ogiltigt uppgifts- eller profil-ID.", "danger")
         return redirect(url_for("task_management"))
 
     try:
@@ -286,11 +286,11 @@ def assign_tasks():
 
         db.session.add(new_assigned_task)
         db.session.commit()
-        flash("Task assigned successfully.", "success")
+        flash("Uppgiften har tilldelats.", "success")
     except Exception as e:
         db.session.rollback()
         flash(
-            f"An error occurred while assigning the task: {str(e)}", "danger")
+            f"Ett fel uppstod när uppgiften skulle tilldelas: {str(e)}", "danger")
 
     return redirect(url_for("task_management"))
 

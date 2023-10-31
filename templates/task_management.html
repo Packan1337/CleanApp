@@ -6,10 +6,10 @@
         <div class="row justify-content-center">
             <div class="col-md-6 mb-4">
                 <form action="/assign_tasks" method="post">
-                    <h3 class="mb-3">Assign Tasks</h3>
+                    <h3 class="mb-3">Tilldela Uppgifter</h3>
                     <div class="mb-3">
                         <label for="tasks-lista" class="form-label">
-                            <h5>Select Task</h5>
+                            <h5>Välj Uppgift</h5>
                         </label>
                         <select name="task_id" id="tasks-lista" class="form-select">
                             {% for task in tasks %}
@@ -19,7 +19,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="profil-lista" class="form-label">
-                            <h5>Select Profile</h5>
+                            <h5>Välj Profil</h5>
                         </label>
                         <select name="profile_id" id="profile_id" class="form-select">
                             {% if profiles|length > 0 %}
@@ -27,33 +27,33 @@
                             <option value="{{ profile.id }}">{{ profile.profile_name }}</option>
                             {% endfor %}
                             {% else %}
-                            <option value="no-profile">No profiles found</option>
+                            <option value="no-profile">Inga profiler hittades</option>
                             {% endif %}
                         </select>
                     </div>
-                    <input type="submit" class="btn btn-primary" value="Assign task">
+                    <input type="submit" class="btn btn-primary" value="Tilldela Uppgift">
                 </form>
             </div>
 
             <div class="col-md-6 mb-4">
                 <form id="add-custom-task-form" action="{{ url_for('add_custom_task') }}" method="post">
-                    <h3 class="mb-3">Custom Tasks</h3>
+                    <h3 class="mb-3">Anpassad Uppgift</h3>
                     <div class="mb-3">
                         <label for="custom-task-input" class="form-label">
-                            <h5>Task Name</h5>
+                            <h5>Namn På Uppgiften</h5>
                         </label>
                         <input type="text" name="custom-task-input" id="custom-task-input" class="form-control"
-                            placeholder="Enter a custom task">
+                            placeholder="Ange en anpassad uppgift">
                     </div>
                     <div class="mb-3">
                         <label for="custom-task-description" class="form-label">
-                            <h5>Task Description</h5>
+                            <h5>Beskriv Uppgiften</h5>
                         </label>
                         <textarea name="custom-task-description" id="custom-task-description" class="form-control"
-                            rows="2" placeholder="Enter a description for the task" required></textarea>
+                            rows="2" placeholder="Ange en beskrivning av uppgiften" required></textarea>
                     </div>
                     <input name="add-custom-task" type="submit" class="btn btn-primary" id="add-custom-task"
-                        value="Add task">
+                        value="Lägg till uppgift">
                 </form>
             </div>
         </div>
