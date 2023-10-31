@@ -16,8 +16,28 @@
                     <!-- Kontrollerar om profiler har tilldelade uppgifter -->
                     {% for assigned_task in profile.assigned_tasks %}
                     <div class="card mb-3 user-card">
-                        <div class="card-body user-card-body">
-                            <h5 class="card-title user-card-title">{{ assigned_task.task.task_title }}</h5>
+                        <div class="card-body user-card-body"id = "user-card-script"> 
+                                <input type="checkbox" id="myCheck" onclick="myFunction()">
+                                <script>
+                                function myFunction() {
+                                var checkBox = document.getElementById("myCheck");
+                                var text = document.getElementById("done-text");
+                                var bakgrund = document.getElementById("user-card-script");
+                                if (checkBox.checked == true){
+                                    text.style.display = "inline";
+                                    bakgrund.style.backgroundColor = "grey"
+                                } else {
+                                    text.style.display = "none";
+                                    bakgrund.style.backgroundColor = "rgb(253, 255, 219)"
+                                }
+                                }
+                                </script>
+                                <!--
+                            <label for ="checkbox" class="checkbox">
+                                <input type="checkbox" id="check" name="check">
+                                    <span class="checkmark"></span>
+                            </label>-->
+                            <h5 class="card-title user-card-title">{{ assigned_task.task.task_title }}<p id="done-text" style="display:none">Done!</p></h5>
                             <p class="card-text user-card-text">{{ assigned_task.task.task_desc }}</p>
                         </div>
                         <div class="card-footer user-card-footer">

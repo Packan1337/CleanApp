@@ -40,6 +40,10 @@
 .user-card-body {
   border-radius: 5px;
   padding: 16px;
+  /*background-color: rgb(253, 255, 219);*/
+}
+
+#user-card-script {
   background-color: rgb(253, 255, 219);
 }
 
@@ -384,4 +388,19 @@ h5 {
 .grid-item {
   grid-auto-flow: row;
   
+}
+
+.checkbox {
+  margin-left: 300px;
+  position:absolute;
+}
+
+#myCheck {
+  margin-left: 300px;
+  position:absolute;
+}
+
+#done-text {
+  color:#388e3c;
+  margin-left:30px;
 }
