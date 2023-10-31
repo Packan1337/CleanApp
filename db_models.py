@@ -11,8 +11,10 @@ class User(db.Model):
     last_name = db.Column(db.String(50))
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(300))
-    profiles = db.relationship('Profiles', backref='user', lazy=True)
-    tasks = db.relationship('Tasks', backref='user', lazy=True)
+    household_name = db.Column(db.String(15))
+    profiles = db.relationship('Profiles', backref='user', lazy=True, cascade="all, delete-orphan")
+    tasks = db.relationship('Tasks', backref='user', lazy=True, cascade="all, delete-orphan")
+    
 
 
 class Profiles(db.Model):
