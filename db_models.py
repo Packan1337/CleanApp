@@ -17,6 +17,7 @@ class User(db.Model):
                             lazy=True, cascade="all, delete-orphan")
 
 
+
 class Profiles(db.Model):
     __tablename__ = "profiles"
     id = db.Column(db.Integer, primary_key=True)

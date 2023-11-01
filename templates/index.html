@@ -8,14 +8,16 @@
             <h5>Vecka: {{ week_number }}</h5>
         </div>
         <div class="grid-container">
-            {% if profiles|length > 0 %} <!-- Kontrollerar om det finns profiler -->
+            {% if profiles|length > 0 %}
             {% for profile in profiles %}
             <div class="grid-item">
                 <div class="col-md-6">
                     <h3>{{ profile.profile_name }}'s uppgifter</h3>
-                    <!-- Kontrollerar om profiler har tilldelade uppgifter -->
                     {% for assigned_task in profile.assigned_tasks %}
                     <div class="card mb-3 user-card">
+                        <div class="checkbox-container">
+                            <input type="checkbox" class="task-checkbox">
+                        </div>
                         <div class="card-body user-card-body">
                             <h5 class="card-title user-card-title">{{ assigned_task.task.task_title }}</h5>
                             <p class="card-text user-card-text">{{ assigned_task.task.task_desc }}</p>
@@ -30,7 +32,7 @@
                 </div>
             </div>
             {% endfor %}
-            {% else %} <!-- Om det inte finns några profiler alls -->
+            {% else %}
             <div>
                 <h3>Ingenting att visa här än!</h3>
                 <p>
@@ -41,4 +43,21 @@
         </div>
     </div>
 </body>
+
+<script>
+    // JavaScript to add blur effect when checkboxes are checked
+    const checkboxes = document.querySelectorAll('.task-checkbox');
+
+    checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener('change', function () {
+            const card = this.closest('.user-card');
+            if (this.checked) {
+                card.classList.add('blur');
+            } else {
+                card.classList.remove('blur');
+            }
+        });
+    });
+</script>
+
 {% endblock %}

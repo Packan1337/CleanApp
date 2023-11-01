@@ -27,10 +27,28 @@
 }
 
 /* CARDS */
+
+.checkbox-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.task-checkbox {
+  margin: 0;
+  transform: scale(1.5);
+}
+
+.blur {
+  filter: blur(2.5px);
+}
+
 .user-card {
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
   transition: transform .2s ease-in-out;
   width: 350px;
+  position: relative;
+  transition: filter 0.3s;
 }
 
 .user-card:hover {
@@ -371,7 +389,7 @@ h5 {
   margin-right: 10px;
 }
 
-#add-custom-task{
+#add-custom-task {
   margin-top: 10px;
 }
 
@@ -383,5 +401,36 @@ h5 {
 
 .grid-item {
   grid-auto-flow: row;
-  
+
+}
+
+/* TASK MANAGEMENT */
+
+/* Custom CSS for larger checkboxes and labels */
+.form-check-input {
+  transform: scale(1.3);
+}
+
+.task-title:hover {
+  cursor: pointer;
+  background-color: #f5f5f5;
+  /* Ljusgrå bakgrund */
+}
+
+.avatar-small {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.profile-card {
+  max-height: 80px;
+  overflow: hidden;
+  /* width: fit-content; */
+}
+
+.profile-card:hover {
+  cursor: pointer;
+  background-color: #f5f5f5;
+  /* Ljusgrå bakgrund */
 }
