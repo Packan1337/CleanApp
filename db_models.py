@@ -3,7 +3,7 @@ from sqlalchemy import text
 
 db = SQLAlchemy()
 
-
+#################### USER ####################
 class User(db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
@@ -17,7 +17,7 @@ class User(db.Model):
                             lazy=True, cascade="all, delete-orphan")
 
 
-
+#################### PROFILES ####################
 class Profiles(db.Model):
     __tablename__ = "profiles"
     id = db.Column(db.Integer, primary_key=True)
@@ -27,7 +27,7 @@ class Profiles(db.Model):
     assigned_tasks = db.relationship(
         'AssignedTasks', backref='profile', lazy=True, cascade="all, delete-orphan")
 
-
+#################### TASKS ####################
 class Tasks(db.Model):
     __tablename__ = "tasks"
     id = db.Column(db.Integer, primary_key=True)
@@ -89,7 +89,7 @@ class Tasks(db.Model):
 
         db.session.commit()
 
-
+#################### ASSIGNED TASKS ####################
 class AssignedTasks(db.Model):
     __tablename__ = "assigned_tasks"
     id = db.Column(db.Integer, primary_key=True)

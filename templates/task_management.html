@@ -17,9 +17,9 @@
                                 <label for="tasks-lista" class="form-label">
                                     <h5>Välj Uppgifter</h5>
                                 </label>
-                                <div class="row"> <!-- ADD THIS LINE -->
+                                <div class="row">
                                     {% for task in tasks %}
-                                    <div class="col-md-6"> <!-- ADD THIS LINE -->
+                                    <div class="col-md-6">
                                         <div class="card mb-3">
                                             <div class="card-header d-flex justify-content-between task-title">
                                                 <div class="left-content">
@@ -50,9 +50,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div> <!-- ADD THIS LINE -->
+                                    </div>
                                     {% endfor %}
-                                </div> <!-- ADD THIS LINE -->
+                                </div>
                             </div>
 
                             <!-- Profiles -->
@@ -130,7 +130,108 @@
         </div>
     </div>
 
+    <!-- HTML för modalen -->
+    <div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTaskModalLabel">Redigera Uppgift</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Stäng"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-task-form">
+                        <input type="hidden" id="edit-task-id" name="task_id">
+                        <div class="mb-3">
+                            <label for="new_name" class="form-label">Uppgiftsnamn</label>
+                            <input type="text" class="form-control" id="new_name" name="new_name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_desc" class="form-label">Beskrivning</label>
+                            <textarea class="form-control" id="new_desc" name="new_desc"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Spara ändringar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+
+            var editTaskModal = new bootstrap.Modal(document.getElementById('editTaskModal'));
+
+            // Funktion för att öppna modal och fylla i uppgiftens data för redigering
+            document.querySelectorAll('.edit-icon').forEach(editIcon => {
+                editIcon.addEventListener('click', function () {
+                    let taskId = this.getAttribute('data-id');
+                    let taskCard = this.closest('.card');
+                    let taskTitle = taskCard.querySelector('.form-check-label').textContent.trim();
+                    let taskDesc = taskCard.querySelector('.card-text').textContent.trim();
+
+                    document.getElementById('edit-task-id').value = taskId;
+                    document.getElementById('new_name').value = taskTitle;
+                    document.getElementById('new_desc').value = taskDesc;
+
+                    editTaskModal.show();
+                });
+            });
+
+            // Hantera klick på "Spara ändringar"-knappen
+            document.querySelector('#edit-task-form button[type="submit"]').addEventListener('click', function (e) {
+                e.preventDefault();
+
+                let formData = new FormData(document.getElementById('edit-task-form'));
+                let taskId = document.getElementById('edit-task-id').value;
+
+                $.ajax({
+                    type: "POST",
+                    url: '/edit_task/' + taskId,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response && response.indexOf("success") !== -1) {
+                            location.reload();
+                        } else {
+                            alert("Ett fel inträffade när uppgiften skulle uppdateras.");
+                        }
+                    }
+                });
+            });
+
+            document.querySelectorAll('.delete-icon').forEach(deleteIcon => {
+                deleteIcon.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    let taskId = this.getAttribute('data-id');
+
+                    if (confirm("Are you sure you want to delete this task?")) {
+                        // AJAX request to delete the task
+                        $.ajax({
+                            type: "POST",
+                            url: '/delete_task/' + taskId,
+                            dataType: "json",
+                            success: function (response) {
+                                if (response.status === "success") {
+                                    location.href = '/task_management';  // Redirect to task_management endpoint
+                                } else {
+                                    alert("Ett fel inträffade när uppgiften skulle tas bort.");
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Lyssnare för stängknappen
+            document.querySelector('.btn-close').addEventListener('click', function () {
+                editTaskModal.hide();
+            });
+
+        });
+
+        // Lyssnare för att visa/dölja uppgiftens beskrivning
         $(document).ready(function () {
             $('.task-title').on('click', function () {
                 $(this).siblings('.task-description-hidden').toggle();
@@ -139,16 +240,14 @@
             $('input[type="checkbox"]').on('click', function (e) {
                 e.stopPropagation();
             });
-        });
-    </script>
 
-    <script>
-        $('.clickable-card').on('click', function (e) {
-            // Förhindra klickhändelse när användaren klickar direkt på kryssrutan
-            if (!$(e.target).is('input[type="checkbox"]')) {
-                let checkbox = $(this).find('input[type="checkbox"]');
-                checkbox.prop('checked', !checkbox.prop('checked'));
-            }
+            // Lyssnare för att klicka på hela kortet för att markera uppgiften
+            $('.clickable-card').on('click', function (e) {
+                if (!$(e.target).is('input[type="checkbox"]')) {
+                    let checkbox = $(this).find('input[type="checkbox"]');
+                    checkbox.prop('checked', !checkbox.prop('checked'));
+                }
+            });
         });
     </script>
 
