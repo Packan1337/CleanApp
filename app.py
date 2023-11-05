@@ -6,10 +6,11 @@ from flask import (
     request,
     Flask,
     session,
+    jsonify
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 from db_models import db, User, Profiles, AssignedTasks, Tasks
-from datetime import datetime, date
+from datetime import date
 
 app = Flask(__name__)
 app.secret_key = "secretkey"
@@ -24,6 +25,8 @@ with app.app_context():
     db.create_all()
     Tasks.initialize_tasks()
 
+#################### INDEX ####################
+
 
 @app.route("/index")
 def index():
@@ -34,7 +37,7 @@ def index():
         if user:
             profiles = user.profiles
         else:
-            flash("Användaren finns inte.", "danger")
+            flash("User does not exist.", "danger")
             return redirect(url_for("login"))
 
         # Get the current date and week number
@@ -43,8 +46,10 @@ def index():
 
         return render_template("index.html", profiles=profiles, week_number=current_week_number, today=today)
     else:
-        flash("Vänligen logga in för att visa den här sidan.", "danger")
+        flash("Please log in to view this page.", "danger")
         return redirect(url_for("login"))
+
+#################### USER SIGNUP ####################
 
 
 @app.route("/signup")
@@ -74,16 +79,18 @@ def add_user():
             db.session.commit()
 
         else:
-            flash(f"Användaren: {user.email} finns redan.", "danger")
+            flash(f"User: {user.email} already exists.", "danger")
             return redirect(url_for("signup"))
 
-        flash(f"Användaren: {new_user.email} har skapats.", "success")
+        flash(f"User: {new_user.email} created successfully.", "success")
         return redirect(url_for("login"))
 
     except Exception as e:
         db.session.rollback()
-        flash(f"Ett fel uppstod när användaren skulle läggas till: {str(e)}", "danger")
+        flash(f"An error occurred while adding the user: {str(e)}", "danger")
         return redirect(url_for("signup"))
+
+#################### PASSWORD RESET ####################
 
 
 @app.route("/reset_password_page")
@@ -99,25 +106,27 @@ def reset_password():
     new_password_repeat = request.form.get("new_password_repeat")
 
     if new_password != new_password_repeat:
-        flash("Lösenordet matchar inte", "danger")
+        flash("Passwords do not match!", "danger")
         return redirect(url_for("reset_password_page"))
 
     user = User.query.filter_by(email=email).first()
 
     if not user:
-        flash("Användaren med den angivna e-postadressen finns inte!", "danger")
+        flash("User with the provided email does not exist!", "danger")
         return redirect(url_for("reset_password_page"))
 
     if not check_password_hash(user.password, current_password):
-        flash("Aktuella lösenordet är felaktigt!", "danger")
+        flash("Current password is incorrect!", "danger")
         return redirect(url_for("reset_password_page"))
 
     user.password = generate_password_hash(new_password)
 
     db.session.commit()
 
-    flash("Lösenordet har uppdaterats!", "success")
+    flash("Password successfully updated!", "success")
     return redirect(url_for("login"))
+
+#################### LOGIN/LOGOUT ####################
 
 
 @app.route("/")
@@ -133,13 +142,13 @@ def login():
             if check_password_hash(user.password, password):
                 session["user"] = user.email
                 flash(
-                    f"Har loggat in som: {session['user']}.", "success")
+                    f"Successfully logged in as: {session['user']}.", "success")
                 return redirect(url_for("index"))
             else:
-                flash("Felaktigt lösenord, försök igen.", "danger")
+                flash("Incorrect password, try again.", "danger")
 
         else:
-            flash("E-post finns inte.", "danger")
+            flash("Email does not exist.", "danger")
 
     return render_template("login.html")
 
@@ -147,14 +156,16 @@ def login():
 @app.route("/logout")
 def logout():
     session.pop("user", None)
-    flash("Har loggats ut.", "success")
+    flash("Successfully logged out.", "success")
     return redirect(url_for("login"))
+
+#################### PROFILE MANAGEMENT ####################
 
 
 @app.route("/profile_manager")
 def profile_manager():
     if "user" not in session:
-        flash("Logga in för att se denna sida.", "danger")
+        flash("Please log in to view this page.", "danger")
         return redirect(url_for("login"))
     else:
         user = User.query.filter_by(email=session["user"]).first()
@@ -170,7 +181,7 @@ def add_profile():
     try:
         user = User.query.filter_by(email=session["user"]).first()
         if user is None:
-            flash(f"Användare: {user.email} finns inte.", "danger")
+            flash(f"User: {user.email} does not exist.", "danger")
             return redirect(url_for("profile_manager"))
 
         else:
@@ -188,15 +199,17 @@ def add_profile():
             db.session.commit()
 
             flash(
-                f"Profil: {new_profile.profile_name} skapades.", "success"
+                f"Profile: {new_profile.profile_name} created successfully.", "success"
             )
             return redirect(url_for("profile_manager"))
 
     except Exception as e:
         db.session.rollback()
         flash(
-            f"Ett fel uppstod när profilen skulle läggas till: {str(e)}", "danger")
+            f"An error occurred while adding the profile: {str(e)}", "danger")
         return redirect(url_for("profile_manager"))
+
+#################### PROFILE DELETE/EDIT ####################
 
 
 @app.route("/delete_profile/<int:profile_id>", methods=["POST"])
@@ -205,11 +218,11 @@ def delete_profile(profile_id):
     try:
         db.session.delete(profile)
         db.session.commit()
-        flash("Profilen har tagits bort.", "success")
+        flash("Profile deleted successfully.", "success")
     except Exception as e:
         print(e)
         db.session.rollback()
-        flash("Fel vid borttagning av profil.", "danger")
+        flash("Error deleting profile.", "danger")
     return redirect(url_for("profile_manager"))
 
 
@@ -220,10 +233,12 @@ def edit_profile(profile_id):
     if new_name:
         profile.profile_name = new_name
         db.session.commit()
-        flash("Profilnamnet har uppdaterats.", "success")
+        flash("Profile name updated successfully.", "success")
     else:
-        flash("Ogiltigt namn.", "danger")
+        flash("Invalid name.", "danger")
     return redirect(url_for("profile_manager"))
+
+#################### TASK MANAGEMENT ####################
 
 
 @app.route("/task_management")
@@ -238,11 +253,11 @@ def task_management():
             default_tasks = Tasks.query.filter_by(user_id=None).all()
             tasks = default_tasks + custom_tasks
         else:
-            flash("Användare finns inte.", "danger")
+            flash("User does not exist.", "danger")
             return redirect(url_for("login"))
 
     else:
-        flash("Logga in för att se denna sida.", "danger")
+        flash("Please log in to view this page.", "danger")
         return redirect(url_for("login"))
 
     return render_template("task_management.html", profiles=profiles, tasks=tasks)
@@ -259,39 +274,75 @@ def add_custom_task():
                          task_weight=5, task_type="custom", user_id=user.id)
         db.session.add(new_task)
         db.session.commit()
-        flash("Uppgiften har lagts till.", "success")
+        flash("Task added successfully.", "success")
     else:
-        flash("Ogiltigt uppgiftsnamn.", "danger")
+        flash("Invalid task name.", "danger")
 
     return redirect(url_for("task_management"))
 
 
 @app.route("/assign_tasks", methods=["POST"])
 def assign_tasks():
-    task_id = request.form.get("task_id")
-    profile_id = request.form.get("profile_id")
+    task_ids = request.form.getlist("task_ids[]")
+    profile_ids = request.form.getlist("profile_ids[]")
 
     try:
-        task_id = int(task_id)
-        profile_id = int(profile_id)
+        task_ids = [int(task_id) for task_id in task_ids]
+        profile_ids = [int(profile_id) for profile_id in profile_ids]
     except ValueError:
-        flash("Ogiltigt uppgifts- eller profil-ID.", "danger")
+        flash("Invalid task or profile ID.", "danger")
         return redirect(url_for("task_management"))
 
     try:
-        new_assigned_task = AssignedTasks(
-            task_id=task_id,
-            profile_id=profile_id,
-        )
-
-        db.session.add(new_assigned_task)
+        for task_id in task_ids:
+            for profile_id in profile_ids:
+                new_assigned_task = AssignedTasks(
+                    task_id=task_id,
+                    profile_id=profile_id,
+                )
+                db.session.add(new_assigned_task)
         db.session.commit()
-        flash("Uppgiften har tilldelats.", "success")
+        flash("Tasks assigned successfully.", "success")
     except Exception as e:
         db.session.rollback()
         flash(
-            f"Ett fel uppstod när uppgiften skulle tilldelas: {str(e)}", "danger")
+            f"An error occurred while assigning the tasks: {str(e)}", "danger")
 
+    return redirect(url_for("task_management"))
+
+
+#################### TASK DELETE/EDIT ####################
+
+@app.route("/delete_task/<int:task_id>", methods=["POST"])
+def delete_task(task_id):
+    task = Tasks.query.get_or_404(task_id)
+    try:
+        db.session.delete(task)
+        db.session.commit()
+        flash("Task deleted successfully.", "success")
+        return jsonify(status="success")
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        flash("Error deleting task.", "danger")
+        return jsonify(status="error"), 500
+
+
+# Task edit
+@app.route("/edit_task/<int:task_id>", methods=["POST"])
+def edit_task(task_id):
+    task = Tasks.query.get_or_404(task_id)
+    new_name = request.form.get("new_name")
+    new_desc = request.form.get("new_desc")
+    new_weight = request.form.get("new_weight")
+    if new_name:
+        task.task_title = new_name
+        task.task_desc = new_desc
+        task.task_weight = new_weight
+        db.session.commit()
+        flash("Task updated successfully.", "success")
+    else:
+        flash("Invalid task name.", "danger")
     return redirect(url_for("task_management"))
 
 
