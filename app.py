@@ -6,10 +6,11 @@ from flask import (
     request,
     Flask,
     session,
+    jsonify
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 from db_models import db, User, Profiles, AssignedTasks, Tasks
-from datetime import datetime, date
+from datetime import date
 
 app = Flask(__name__)
 app.secret_key = "secretkey"
@@ -23,6 +24,8 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
     Tasks.initialize_tasks()
+
+#################### INDEX ####################
 
 
 @app.route("/index")
@@ -45,6 +48,8 @@ def index():
     else:
         flash("Please log in to view this page.", "danger")
         return redirect(url_for("login"))
+
+#################### USER SIGNUP ####################
 
 
 @app.route("/signup")
@@ -85,6 +90,8 @@ def add_user():
         flash(f"An error occurred while adding the user: {str(e)}", "danger")
         return redirect(url_for("signup"))
 
+#################### PASSWORD RESET ####################
+
 
 @app.route("/reset_password_page")
 def reset_password_page():
@@ -119,6 +126,8 @@ def reset_password():
     flash("Password successfully updated!", "success")
     return redirect(url_for("login"))
 
+#################### LOGIN/LOGOUT ####################
+
 
 @app.route("/")
 @app.route("/login", methods=["GET", "POST"])
@@ -149,6 +158,8 @@ def logout():
     session.pop("user", None)
     flash("Successfully logged out.", "success")
     return redirect(url_for("login"))
+
+#################### PROFILE MANAGEMENT ####################
 
 
 @app.route("/profile_manager")
@@ -198,6 +209,8 @@ def add_profile():
             f"An error occurred while adding the profile: {str(e)}", "danger")
         return redirect(url_for("profile_manager"))
 
+#################### PROFILE DELETE/EDIT ####################
+
 
 @app.route("/delete_profile/<int:profile_id>", methods=["POST"])
 def delete_profile(profile_id):
@@ -224,6 +237,8 @@ def edit_profile(profile_id):
     else:
         flash("Invalid name.", "danger")
     return redirect(url_for("profile_manager"))
+
+#################### TASK MANAGEMENT ####################
 
 
 @app.route("/task_management")
@@ -268,30 +283,66 @@ def add_custom_task():
 
 @app.route("/assign_tasks", methods=["POST"])
 def assign_tasks():
-    task_id = request.form.get("task_id")
-    profile_id = request.form.get("profile_id")
+    task_ids = request.form.getlist("task_ids[]")
+    profile_ids = request.form.getlist("profile_ids[]")
 
     try:
-        task_id = int(task_id)
-        profile_id = int(profile_id)
+        task_ids = [int(task_id) for task_id in task_ids]
+        profile_ids = [int(profile_id) for profile_id in profile_ids]
     except ValueError:
         flash("Invalid task or profile ID.", "danger")
         return redirect(url_for("task_management"))
 
     try:
-        new_assigned_task = AssignedTasks(
-            task_id=task_id,
-            profile_id=profile_id,
-        )
-
-        db.session.add(new_assigned_task)
+        for task_id in task_ids:
+            for profile_id in profile_ids:
+                new_assigned_task = AssignedTasks(
+                    task_id=task_id,
+                    profile_id=profile_id,
+                )
+                db.session.add(new_assigned_task)
         db.session.commit()
-        flash("Task assigned successfully.", "success")
+        flash("Tasks assigned successfully.", "success")
     except Exception as e:
         db.session.rollback()
         flash(
-            f"An error occurred while assigning the task: {str(e)}", "danger")
+            f"An error occurred while assigning the tasks: {str(e)}", "danger")
 
+    return redirect(url_for("task_management"))
+
+
+#################### TASK DELETE/EDIT ####################
+
+@app.route("/delete_task/<int:task_id>", methods=["POST"])
+def delete_task(task_id):
+    task = Tasks.query.get_or_404(task_id)
+    try:
+        db.session.delete(task)
+        db.session.commit()
+        flash("Task deleted successfully.", "success")
+        return jsonify(status="success")
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        flash("Error deleting task.", "danger")
+        return jsonify(status="error"), 500
+
+
+# Task edit
+@app.route("/edit_task/<int:task_id>", methods=["POST"])
+def edit_task(task_id):
+    task = Tasks.query.get_or_404(task_id)
+    new_name = request.form.get("new_name")
+    new_desc = request.form.get("new_desc")
+    new_weight = request.form.get("new_weight")
+    if new_name:
+        task.task_title = new_name
+        task.task_desc = new_desc
+        task.task_weight = new_weight
+        db.session.commit()
+        flash("Task updated successfully.", "success")
+    else:
+        flash("Invalid task name.", "danger")
     return redirect(url_for("task_management"))
 
 

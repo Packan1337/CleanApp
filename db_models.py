@@ -3,7 +3,7 @@ from sqlalchemy import text
 
 db = SQLAlchemy()
 
-
+#################### USER ####################
 class User(db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
@@ -11,10 +11,13 @@ class User(db.Model):
     last_name = db.Column(db.String(50))
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(300))
-    profiles = db.relationship('Profiles', backref='user', lazy=True)
-    tasks = db.relationship('Tasks', backref='user', lazy=True)
+    profiles = db.relationship(
+        'Profiles', backref='user', lazy=True, cascade="all, delete-orphan")
+    tasks = db.relationship('Tasks', backref='user',
+                            lazy=True, cascade="all, delete-orphan")
 
 
+#################### PROFILES ####################
 class Profiles(db.Model):
     __tablename__ = "profiles"
     id = db.Column(db.Integer, primary_key=True)
@@ -22,16 +25,16 @@ class Profiles(db.Model):
     profile_name = db.Column(db.String(50))
     profile_type = db.Column(db.String(50))
     assigned_tasks = db.relationship(
-        'AssignedTasks', backref='profile', lazy=True)
+        'AssignedTasks', backref='profile', lazy=True, cascade="all, delete-orphan")
 
-
+#################### TASKS ####################
 class Tasks(db.Model):
     __tablename__ = "tasks"
     id = db.Column(db.Integer, primary_key=True)
     task_title = db.Column(db.String(100))
     task_desc = db.Column(db.String(200))
     task_weight = db.Column(db.Integer)
-    task_type = db.Column(db.String(20))  # Can be 'default' or 'custom'
+    task_type = db.Column(db.String(20))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
 
     def initialize_tasks():
@@ -86,7 +89,7 @@ class Tasks(db.Model):
 
         db.session.commit()
 
-
+#################### ASSIGNED TASKS ####################
 class AssignedTasks(db.Model):
     __tablename__ = "assigned_tasks"
     id = db.Column(db.Integer, primary_key=True)
